@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Contact Us - Ceylon Glow</title>
     @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
@@ -22,13 +23,68 @@
         <div class="max-w-6xl mx-auto px-4 space-y-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="bg-white rounded-xl shadow p-6">
-                    <h2 class="text-lg font-semibold mb-2">Get in touch</h2>
-                    <p class="text-gray-600 text-sm mb-4">We'd love to hear from you. Fill out the form and we'll get back to you.</p>
-                    <form class="space-y-3">
-                        <input type="text" placeholder="Full name" class="w-full p-2 border rounded-lg">
-                        <input type="email" placeholder="Email" class="w-full p-2 border rounded-lg">
-                        <textarea placeholder="Message" rows="4" class="w-full p-2 border rounded-lg"></textarea>
-                        <button type="button" class="bg-[#506c2a] text-white px-5 py-2.5 rounded-full">Send Message</button>
+                    <h2 class="text-lg font-semibold mb-2">Book a Service</h2>
+                    <p class="text-gray-600 text-sm mb-4">Ready to book? Fill out the form below and we'll get back to you to confirm your appointment.</p>
+                    
+                    @if(session('success'))
+                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                    <form action="{{ route('bookings.store') }}" method="POST" class="space-y-3">
+                        @csrf
+                        <input type="text" name="customer_name" placeholder="Full name" value="{{ old('customer_name') }}" class="w-full p-2 border rounded-lg @error('customer_name') border-red-500 @enderror" required>
+                        @error('customer_name')
+                            <p class="text-red-500 text-xs">{{ $message }}</p>
+                        @enderror
+
+                        <input type="email" name="customer_email" placeholder="Email" value="{{ old('customer_email') }}" class="w-full p-2 border rounded-lg @error('customer_email') border-red-500 @enderror" required>
+                        @error('customer_email')
+                            <p class="text-red-500 text-xs">{{ $message }}</p>
+                        @enderror
+
+                        <input type="tel" name="customer_phone" placeholder="Phone number" value="{{ old('customer_phone') }}" class="w-full p-2 border rounded-lg @error('customer_phone') border-red-500 @enderror" required>
+                        @error('customer_phone')
+                            <p class="text-red-500 text-xs">{{ $message }}</p>
+                        @enderror
+
+                        <select name="service_id" class="w-full p-2 border rounded-lg @error('service_id') border-red-500 @enderror" required>
+                            <option value="">Select a service</option>
+                            @foreach(\App\Models\Service::all() as $service)
+                                <option value="{{ $service->_id }}" {{ (old('service_id') == $service->_id || request('service') == $service->_id) ? 'selected' : '' }}>
+                                    {{ $service->name }} - ${{ $service->price }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('service_id')
+                            <p class="text-red-500 text-xs">{{ $message }}</p>
+                        @enderror
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <input type="date" name="booking_date" value="{{ old('booking_date') }}" class="p-2 border rounded-lg @error('booking_date') border-red-500 @enderror" required>
+                            @error('booking_date')
+                                <p class="text-red-500 text-xs">{{ $message }}</p>
+                            @enderror
+
+                            <input type="time" name="booking_time" value="{{ old('booking_time') }}" class="p-2 border rounded-lg @error('booking_time') border-red-500 @enderror" required>
+                            @error('booking_time')
+                                <p class="text-red-500 text-xs">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <textarea name="notes" placeholder="Additional notes or special requests" rows="3" class="w-full p-2 border rounded-lg @error('notes') border-red-500 @enderror">{{ old('notes') }}</textarea>
+                        @error('notes')
+                            <p class="text-red-500 text-xs">{{ $message }}</p>
+                        @enderror
+
+                        <button type="submit" class="bg-[#506c2a] text-white px-5 py-2.5 rounded-full hover:bg-[#3e541f] transition-colors">Book Now</button>
                     </form>
                 </div>
                 <div class="bg-white rounded-xl shadow p-6">

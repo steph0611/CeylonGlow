@@ -35,10 +35,14 @@
                         </h3>
                         <p class="text-[#506c2a] font-bold">${{ number_format($product->price, 2) }}</p>
                         @if($qty > 0)
-                            <form method="POST" action="{{ route('cart.add', $product->getKey()) }}" class="mt-3 inline-block">
-                                @csrf
-                                <button type="submit" class="btn-primary">Add to Cart</button>
-                            </form>
+                            @auth
+                                <form method="POST" action="{{ route('cart.add', $product->getKey()) }}" class="mt-3 inline-block">
+                                    @csrf
+                                    <button type="submit" class="btn-primary">Add to Cart</button>
+                                </form>
+                            @else
+                                <a href="{{ route('login') }}" class="mt-3 inline-block btn-primary">Login to Add to Cart</a>
+                            @endauth
                         @else
                             <span class="mt-3 inline-block bg-gray-300 text-gray-600 px-6 py-3 rounded-full cursor-not-allowed" aria-disabled="true">Out of Stock</span>
                         @endif

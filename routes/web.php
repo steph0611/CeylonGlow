@@ -8,6 +8,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminBannerController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\Admin\AdminBookingController;
  
 
 // Home page
@@ -80,6 +82,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     // Order CRUD
     Route::resource('orders', App\Http\Controllers\Admin\OrderController::class);
+
+    // Booking CRUD
+    Route::get('/bookings', [AdminBookingController::class, 'index'])->name('admin.bookings.index');
+    Route::get('/bookings/{id}', [AdminBookingController::class, 'show'])->name('admin.bookings.show');
+    Route::get('/bookings/{id}/edit', [AdminBookingController::class, 'edit'])->name('admin.bookings.edit');
+    Route::put('/bookings/{id}', [AdminBookingController::class, 'update'])->name('admin.bookings.update');
+    Route::delete('/bookings/{id}', [AdminBookingController::class, 'destroy'])->name('admin.bookings.destroy');
+    Route::patch('/bookings/{id}/status', [AdminBookingController::class, 'updateStatus'])->name('admin.bookings.update-status');
 });
 
 
@@ -89,11 +99,13 @@ Route::get('/products', [ProductController::class, 'index'])->name('products.ind
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::post('/products', [ProductController::class, 'store']);
 
-// Cart
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
-Route::delete('/cart/remove/{product}', [CartController::class, 'remove'])->name('cart.remove');
-Route::post('/cart/order', [CartController::class, 'placeOrder'])->name('cart.order');
+// Cart (protected by authentication)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+    Route::delete('/cart/remove/{product}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/order', [CartController::class, 'placeOrder'])->name('cart.order');
+});
  
 
 // Static pages
@@ -101,6 +113,9 @@ Route::view('/about', 'about')->name('about');
 Route::get('/services', [App\Http\Controllers\ServiceController::class, 'index'])->name('services');
 Route::view('/membership', 'membership')->name('membership');
 Route::view('/contact', 'contact')->name('contact');
+
+// Booking routes
+Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
 
 
 

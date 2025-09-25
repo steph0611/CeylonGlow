@@ -14,24 +14,10 @@
     </style>
 </head>
 <body class="antialiased text-gray-900">
-    <header class="absolute top-0 left-0 w-full z-50">
-        <div class="max-w-6xl mx-auto flex items-center justify-between py-4 px-4">
-            <div class="flex items-center gap-3">
-                <img src="{{ asset('images/Logo.png') }}" alt="Logo" class="h-8 w-8">
-                <nav class="hidden md:flex items-center gap-8 text-sm text-white">
-                    <a href="#about" class="hover:text-yellow-400">About Us</a>
-                    <a href="#services" class="hover:text-yellow-400">Services</a>
-                    <a href="#offers" class="hover:text-yellow-400">Offers</a>
-                    <a href="#contacts" class="hover:text-yellow-400">Contacts</a>
-                </nav>
-            </div>
-            <div class="flex items-center gap-4 text-white">
-                <span class="material-icons">phone</span>
-                <span class="material-icons">search</span>
-                <span class="material-icons">person</span>
-            </div>
-        </div>
-    </header>
+    
+    {{-- Include Navigation --}}
+    @include('navigation-menu')
+
 
 
     <section class="relative h-screen w-full overflow-hidden">

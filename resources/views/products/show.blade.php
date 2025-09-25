@@ -40,10 +40,14 @@
                         @endif
                     </div>
                     @if($qty > 0)
-                        <form method="POST" action="{{ route('cart.add', $product->getKey()) }}">
-                            @csrf
-                            <button type="submit" class="inline-block bg-[#506c2a] text-white px-6 py-3 rounded-full">Add to Cart</button>
-                        </form>
+                        @auth
+                            <form method="POST" action="{{ route('cart.add', $product->getKey()) }}">
+                                @csrf
+                                <button type="submit" class="inline-block bg-[#506c2a] text-white px-6 py-3 rounded-full">Add to Cart</button>
+                            </form>
+                        @else
+                            <a href="{{ route('login') }}" class="inline-block bg-[#506c2a] text-white px-6 py-3 rounded-full">Login to Add to Cart</a>
+                        @endauth
                     @else
                         <span class="inline-block bg-gray-300 text-gray-600 px-6 py-3 rounded-full" aria-disabled="true">Out of Stock</span>
                     @endif

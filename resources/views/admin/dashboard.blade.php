@@ -71,9 +71,31 @@
                 <h1 class="text-4xl font-bold mb-2">Admin Dashboard</h1>
                 <p class="text-blue-100">Welcome back! Here's what's happening with your business today.</p>
             </div>
-            <div class="text-right">
-                <div class="text-2xl font-bold">{{ now()->format('M d, Y') }}</div>
-                <div class="text-blue-100">{{ now()->format('l') }}</div>
+            <div class="flex items-center space-x-6">
+                <div class="text-right">
+                    <div class="text-2xl font-bold">{{ now()->format('M d, Y') }}</div>
+                    <div class="text-blue-100">{{ now()->format('l') }}</div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="bg-white bg-opacity-20 p-2 rounded-lg backdrop-blur-sm">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="text-sm text-blue-100">Admin</div>
+                        <div class="text-sm font-semibold">{{ auth()->user()->name ?? 'Administrator' }}</div>
+                    </div>
+                    <form method="POST" action="{{ route('logout') }}" class="ml-4">
+                        @csrf
+                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                            </svg>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -108,7 +130,7 @@
 
 <div class="max-w-7xl mx-auto px-6 py-8">
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-6 mb-8">
         <!-- Products Card -->
         <div class="stat-card rounded-2xl p-6 card-hover">
             <div class="flex items-center justify-between">
@@ -184,6 +206,53 @@
                 </div>
             </div>
         </div>
+
+        <!-- Total Bookings Card -->
+        <div class="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-6 card-hover text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-purple-100 text-sm font-medium">Total Bookings</p>
+                    <p class="text-3xl font-bold">{{ $totalBookings ?? 0 }}</p>
+                </div>
+                <div class="bg-white bg-opacity-20 p-3 rounded-xl">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Low Stock Card -->
+        <div class="bg-gradient-to-r from-orange-400 to-red-500 rounded-2xl p-6 card-hover text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-orange-100 text-sm font-medium">Low Stock</p>
+                    <p class="text-3xl font-bold">{{ $totalLowStock ?? 0 }}</p>
+                    <p class="text-orange-100 text-xs mt-1">≤ {{ $lowStockThreshold ?? 10 }} items</p>
+                </div>
+                <div class="bg-white bg-opacity-20 p-3 rounded-xl">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Out of Stock Card -->
+        <div class="bg-gradient-to-r from-red-500 to-red-700 rounded-2xl p-6 card-hover text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-red-100 text-sm font-medium">Out of Stock</p>
+                    <p class="text-3xl font-bold">{{ $totalOutOfStock ?? 0 }}</p>
+                    <p class="text-red-100 text-xs mt-1">0 items</p>
+                </div>
+                <div class="bg-white bg-opacity-20 p-3 rounded-xl">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Charts Section -->
@@ -205,6 +274,97 @@
         </div>
     </div>
 
+    <!-- Stock Alerts Section -->
+    @if(($totalLowStock > 0) || ($totalOutOfStock > 0))
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-bold text-gray-900 flex items-center">
+                <svg class="w-6 h-6 mr-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 18.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+                Stock Alerts
+            </h3>
+            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">
+                {{ $totalLowStock + $totalOutOfStock }} items need attention
+            </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Out of Stock Products -->
+            @if($totalOutOfStock > 0)
+            <div class="bg-red-50 border border-red-200 rounded-xl p-6">
+                <div class="flex items-center mb-4">
+                    <div class="bg-red-100 p-2 rounded-lg mr-3">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 18.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-red-900">Out of Stock ({{ $totalOutOfStock }})</h4>
+                        <p class="text-red-600 text-sm">Products with 0 quantity</p>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    @foreach($outOfStockProducts->take(5) as $product)
+                    <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-red-200">
+                        <div class="flex items-center">
+                            <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/service-1.jpg') }}" alt="{{ $product->name }}" class="w-10 h-10 object-cover rounded-lg mr-3">
+                            <div>
+                                <p class="font-medium text-gray-900">{{ $product->name }}</p>
+                                <p class="text-sm text-gray-500">${{ number_format($product->price, 2) }}</p>
+                            </div>
+                        </div>
+                        <a href="{{ route('admin.products.edit', $product->id) }}" class="bg-red-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-700 transition-colors">
+                            Restock
+                        </a>
+                    </div>
+                    @endforeach
+                    @if($totalOutOfStock > 5)
+                    <p class="text-sm text-red-600 text-center">... and {{ $totalOutOfStock - 5 }} more products</p>
+                    @endif
+                </div>
+            </div>
+            @endif
+
+            <!-- Low Stock Products -->
+            @if($totalLowStock > 0)
+            <div class="bg-orange-50 border border-orange-200 rounded-xl p-6">
+                <div class="flex items-center mb-4">
+                    <div class="bg-orange-100 p-2 rounded-lg mr-3">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 18.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-orange-900">Low Stock ({{ $totalLowStock }})</h4>
+                        <p class="text-orange-600 text-sm">Products with ≤ {{ $lowStockThreshold }} quantity</p>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    @foreach($lowStockProducts->take(5) as $product)
+                    <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-orange-200">
+                        <div class="flex items-center">
+                            <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/service-1.jpg') }}" alt="{{ $product->name }}" class="w-10 h-10 object-cover rounded-lg mr-3">
+                            <div>
+                                <p class="font-medium text-gray-900">{{ $product->name }}</p>
+                                <p class="text-sm text-gray-500">Qty: {{ $product->qty }} • ${{ number_format($product->price, 2) }}</p>
+                            </div>
+                        </div>
+                        <a href="{{ route('admin.products.edit', $product->id) }}" class="bg-orange-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-700 transition-colors">
+                            Restock
+                        </a>
+                    </div>
+                    @endforeach
+                    @if($totalLowStock > 5)
+                    <p class="text-sm text-orange-600 text-center">... and {{ $totalLowStock - 5 }} more products</p>
+                    @endif
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+    @endif
+
     <!-- Navigation Tabs -->
     <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
         <div class="flex flex-wrap gap-4 mb-6">
@@ -212,6 +372,7 @@
             <button class="tab-btn" data-tab="banners">Banners</button>
             <button class="tab-btn" data-tab="services">Services</button>
             <button class="tab-btn" data-tab="orders">Orders</button>
+            <button class="tab-btn" data-tab="bookings">Bookings</button>
         </div>
 
         <!-- Products Tab -->
@@ -237,7 +398,37 @@
                             <p class="text-gray-600 text-sm mb-3">{{ Str::limit($product->description, 80) }}</p>
                             <div class="flex justify-between items-center mb-3">
                                 <span class="text-2xl font-bold text-[#506c2a]">${{ number_format($product->price, 2) }}</span>
-                                <span class="text-sm text-gray-500">Qty: {{ $product->qty }}</span>
+                                <div class="text-right">
+                                    <span class="text-sm text-gray-500">Qty: {{ $product->qty }}</span>
+                                    @if($product->qty <= 0)
+                                        <div class="mt-1">
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                Out of Stock
+                                            </span>
+                                        </div>
+                                    @elseif($product->qty <= ($lowStockThreshold ?? 10))
+                                        <div class="mt-1">
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                Low Stock
+                                            </span>
+                                        </div>
+                                    @else
+                                        <div class="mt-1">
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                In Stock
+                                            </span>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                             <div class="flex space-x-2">
                                 <a href="{{ route('admin.products.edit', $product->id) }}" class="flex-1 bg-blue-600 text-white text-center py-2 px-3 rounded-lg text-sm hover:bg-blue-700 transition-colors">
@@ -401,6 +592,55 @@
                     </svg>
                     <p class="text-gray-500 text-lg">No orders found</p>
                     <p class="text-gray-400 text-sm">Orders will appear here when customers place them</p>
+                </div>
+            @endif
+        </div>
+
+        <!-- Bookings Tab -->
+        <div id="bookings" class="tab-content hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-900">Recent Bookings</h3>
+                <a href="{{ route('admin.bookings.index') }}" class="btn-primary">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    View All Bookings
+                </a>
+            </div>
+            @if(isset($bookings) && $bookings->count() > 0)
+                <div class="space-y-4">
+                    @foreach($bookings->take(5) as $booking)
+                        <div class="bg-gray-50 rounded-xl p-6 card-hover">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <div class="bg-white p-3 rounded-lg">
+                                        <svg class="w-6 h-6 text-[#506c2a]" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900">{{ $booking->customer_name }}</h4>
+                                        <p class="text-gray-600 text-sm">{{ $booking->service_name }} • {{ \Carbon\Carbon::parse($booking->booking_date)->format('M d, Y') }}</p>
+                                        <p class="text-gray-500 text-xs">{{ \Carbon\Carbon::parse($booking->booking_time)->format('g:i A') }}</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-lg font-bold text-gray-900">${{ number_format($booking->service_price, 2) }}</div>
+                                    <span class="status-badge status-{{ $booking->status }}">
+                                        {{ ucfirst($booking->status) }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="text-center py-12">
+                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <p class="text-gray-500 text-lg">No bookings found</p>
+                    <p class="text-gray-400 text-sm">Bookings will appear here when customers make appointments</p>
                 </div>
             @endif
         </div>

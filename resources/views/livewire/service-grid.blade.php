@@ -16,7 +16,7 @@
                         <div class="text-[#506c2a] font-semibold mt-1">${{ $service->price }}</div>
                         <div class="text-sm text-gray-500 mt-1">{{ $service->duration }} • {{ $service->category }}</div>
                         <p class="text-sm text-gray-600 mt-2">{{ Str::limit($service->description, 100) }}</p>
-                        <a href="#booking" class="inline-block mt-3 bg-[#506c2a] text-white px-4 py-2 rounded-full text-sm hover:bg-[#3e541f] transition-colors">Book Now</a>
+                        <a href="{{ route('contact') }}?service={{ $service->_id }}" class="inline-block mt-3 bg-[#506c2a] text-white px-4 py-2 rounded-full text-sm hover:bg-[#3e541f] transition-colors">Book Now</a>
                     </div>
                 </div>
             @empty

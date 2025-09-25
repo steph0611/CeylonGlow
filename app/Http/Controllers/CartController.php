@@ -191,10 +191,14 @@ class CartController extends Controller
 
         try {
             $user = $request->user();
+            if (!$user) {
+                return back()->with('error', 'You must be logged in to place an order.');
+            }
+            
             $customer = [
-                'id' => $user?->id,
-                'name' => $user->name ?? 'Guest',
-                'email' => $user->email ?? null,
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
             ];
 
             Order::create([

@@ -49,8 +49,9 @@ Route::get('/products/{product}', function (Product $product) {
     ]);
 });
 
-// Cart API (session-based)
-Route::get('/cart', function (Request $request) {
+// Cart API (session-based) - protected by authentication
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/cart', function (Request $request) {
     $cart = $request->session()->get('cart', []);
     $selectedKeys = $request->session()->get('cart_selected', []);
     $total = 0;
@@ -69,8 +70,10 @@ Route::get('/cart', function (Request $request) {
         ],
     ]);
 });
+});
 
-Route::post('/cart/add/{product}', function (Request $request, string $productId) {
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/cart/add/{product}', function (Request $request, string $productId) {
     $quantityToAdd = (int) $request->input('quantity', 1);
     if ($quantityToAdd < 1) {
         $quantityToAdd = 1;
@@ -172,6 +175,7 @@ Route::post('/cart/select-all', function (Request $request) {
 Route::post('/cart/clear-selection', function (Request $request) {
     $request->session()->forget('cart_selected');
     return response()->json(['data' => []]);
+});
 });
 
  
