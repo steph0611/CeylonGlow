@@ -49,14 +49,14 @@ class AdminServiceController extends Controller
             'is_featured' => $request->has('is_featured')
         ]);
 
-        return redirect()->route('admin.services.index')->with('success', 'Service added successfully!');
+        return redirect()->route('admin.dashboard')->with('success', 'Service added successfully!');
     }
 
     public function edit($id)
     {
         $service = Service::find($id);
         if (!$service) {
-            return redirect()->route('admin.services.index')->with('error', 'Service not found.');
+            return redirect()->route('admin.dashboard')->with('error', 'Service not found.');
         }
         return view('admin.services.edit', compact('service'));
     }
@@ -65,7 +65,7 @@ class AdminServiceController extends Controller
     {
         $service = Service::find($id);
         if (!$service) {
-            return redirect()->route('admin.services.index')->with('error', 'Service not found.');
+            return redirect()->route('admin.dashboard')->with('error', 'Service not found.');
         }
 
         $request->validate([
@@ -95,7 +95,7 @@ class AdminServiceController extends Controller
         $service->is_featured = $request->has('is_featured');
         $service->save();
 
-        return redirect()->route('admin.services.index')->with('success', 'Service updated successfully!');
+        return redirect()->route('admin.dashboard')->with('success', 'Service updated successfully!');
     }
 
     public function destroy($id)

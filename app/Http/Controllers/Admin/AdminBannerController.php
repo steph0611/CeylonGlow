@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Banner;
 use App\Models\Product;
+use App\Models\Service;
+use App\Models\Order;
 
 class AdminBannerController extends Controller
 {
@@ -13,8 +15,13 @@ class AdminBannerController extends Controller
     public function index()
     {
         $products = Product::all();
-        $banners  = Banner::orderBy('position')->get(); 
-        return view('admin.dashboard', compact('products', 'banners'));
+        $services = Service::all();
+        $banners  = Banner::orderBy('position')->get();
+        $orders = Order::orderBy('placed_at', 'desc')->take(5)->get();
+        $totalOrders = Order::count();
+        $pendingOrders = Order::where('status', 'pending')->count();
+        
+        return view('admin.dashboard', compact('products', 'services', 'banners', 'orders', 'totalOrders', 'pendingOrders'));
     }
 
     

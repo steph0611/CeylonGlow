@@ -46,18 +46,23 @@ class FortifyServiceProvider extends ServiceProvider
                 return null;
             }
 
-            // Admin login
-            if ($request->routeIs('admin.login.submit') && $user->is_admin) {
-                Auth::guard('admin')->login($user); // admin session
-                return $user;
+            // Admin login - only allow admin users to login via admin route
+            if ($request->routeIs('admin.login.submit')) {
+                if ($user->is_admin) {
+                    return $user;
+                }
+                return null; // Non-admin users cannot login via admin route
             }
 
-            // Normal user login
-            if ($request->routeIs('login.store') && !$user->is_admin) {
-                return $user; // default 'web' guard
+            // Normal user login - only allow non-admin users to login via normal route
+            if ($request->routeIs('login.store')) {
+                if (!$user->is_admin) {
+                    return $user;
+                }
+                return null; // Admin users cannot login via normal route
             }
 
-            return null;
+            return $user; // Default fallback
         });
 
 

@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminBannerController;
+use App\Http\Controllers\CartController;
+ 
 
 // Home page
 Route::get('/', function () {
@@ -29,6 +31,10 @@ Route::get('/login', function () {
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])
     ->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+        
+        // Customer orders
+        Route::get('/my-orders', [App\Http\Controllers\CustomerOrderController::class, 'index'])->name('customer.orders.index');
+        Route::get('/my-orders/{order}', [App\Http\Controllers\CustomerOrderController::class, 'show'])->name('customer.orders.show');
     });
 
 // API user endpoint
@@ -50,38 +56,6 @@ Route::post('/login/admin', [AuthenticatedSessionController::class, 'store'])
 
 // Admin routes (protected by auth + admin middleware)
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
-});
-
-
-
-
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
-Route::post('/products', [ProductController::class, 'store']);
-
-// Static pages
-Route::view('/about', 'about')->name('about');
-Route::get('/services', [App\Http\Controllers\ServiceController::class, 'index'])->name('services');
-Route::view('/membership', 'membership')->name('membership');
-Route::view('/contact', 'contact')->name('contact');
-
-
-
-
-
-
-
-Route::prefix('admin')->group(function () {
-    Route::get('/dashboard', [AdminProductController::class, 'index'])->name('admin.dashboard');
-    Route::post('/dashboard', [AdminProductController::class, 'store'])->name('admin.products.store');
-    Route::delete('/dashboard/{id}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy');
-});
-
-
-Route::prefix('admin')->group(function () {
     // Dashboard that shows both products & banners
     Route::get('/dashboard', [App\Http\Controllers\Admin\AdminBannerController::class, 'index'])->name('admin.dashboard');
 
@@ -103,5 +77,37 @@ Route::prefix('admin')->group(function () {
     Route::get('/services/{id}/edit', [App\Http\Controllers\Admin\AdminServiceController::class, 'edit'])->name('admin.services.edit');
     Route::put('/services/{id}', [App\Http\Controllers\Admin\AdminServiceController::class, 'update'])->name('admin.services.update');
     Route::delete('/services/{id}', [App\Http\Controllers\Admin\AdminServiceController::class, 'destroy'])->name('admin.services.destroy');
+
+    // Order CRUD
+    Route::resource('orders', App\Http\Controllers\Admin\OrderController::class);
 });
+
+
+
+
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+Route::post('/products', [ProductController::class, 'store']);
+
+// Cart
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+Route::delete('/cart/remove/{product}', [CartController::class, 'remove'])->name('cart.remove');
+Route::post('/cart/order', [CartController::class, 'placeOrder'])->name('cart.order');
+ 
+
+// Static pages
+Route::view('/about', 'about')->name('about');
+Route::get('/services', [App\Http\Controllers\ServiceController::class, 'index'])->name('services');
+Route::view('/membership', 'membership')->name('membership');
+Route::view('/contact', 'contact')->name('contact');
+
+
+
+
+
+
+
+
+ 
 

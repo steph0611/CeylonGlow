@@ -14,7 +14,7 @@ class AdminMiddleware
             return $next($request);
         }
 
-        return redirect('/dashboard')->withErrors([
+        return redirect('/')->withErrors([
             'unauthorized' => 'You are not authorized to access the admin area.'
         ]);
     }

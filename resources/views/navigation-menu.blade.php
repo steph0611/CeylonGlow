@@ -26,73 +26,82 @@
             <!-- Right Side: Profile, Teams, and Icons -->
             <div class="flex items-center space-x-4 mix-blend-difference">
 
-                <!-- Teams Dropdown -->
-                @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
+                @auth
+                    <!-- Teams Dropdown -->
+                    @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
+                        <div class="relative hidden md:block">
+                            <x-dropdown align="right" width="60">
+                                <x-slot name="trigger">
+                                    <button type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium bg-transparent rounded-md hover:text-yellow-500 focus:outline-none transition">
+                                        {{ Auth::user()->currentTeam->name }}
+                                        <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                                        </svg>
+                                    </button>
+                                </x-slot>
+                                <x-slot name="content">
+                                    <div class="w-60">
+                                        <div class="block px-4 py-2 text-xs text-gray-400">{{ __('Manage Team') }}</div>
+                                        <x-dropdown-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">
+                                            {{ __('Team Settings') }}
+                                        </x-dropdown-link>
+                                        @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
+                                            <x-dropdown-link href="{{ route('teams.create') }}">
+                                                {{ __('Create New Team') }}
+                                            </x-dropdown-link>
+                                        @endcan
+                                        @if (Auth::user()->allTeams()->count() > 1)
+                                            <div class="border-t border-gray-200"></div>
+                                            <div class="block px-4 py-2 text-xs text-gray-400">{{ __('Switch Teams') }}</div>
+                                            @foreach (Auth::user()->allTeams() as $team)
+                                                <x-switchable-team :team="$team" />
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </x-slot>
+                            </x-dropdown>
+                        </div>
+                    @endif
+
+                    <!-- Settings Dropdown -->
                     <div class="relative hidden md:block">
-                        <x-dropdown align="right" width="60">
+                        <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
-                                <button type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium bg-transparent rounded-md hover:text-yellow-500 focus:outline-none transition">
-                                    {{ Auth::user()->currentTeam->name }}
-                                    <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
-                                    </svg>
-                                </button>
+                                @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
+                                    <button class="flex text-sm border-2 border-transparent rounded-full focus:outline-none transition">
+                                        <img class="h-8 w-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
+                                    </button>
+                                @else
+                                    <button class="inline-flex items-center px-3 py-2 text-sm font-medium bg-transparent hover:text-yellow-500 focus:outline-none transition">
+                                        {{ Auth::user()->name }}
+                                        <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                        </svg>
+                                    </button>
+                                @endif
                             </x-slot>
                             <x-slot name="content">
-                                <div class="w-60">
-                                    <div class="block px-4 py-2 text-xs text-gray-400">{{ __('Manage Team') }}</div>
-                                    <x-dropdown-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">
-                                        {{ __('Team Settings') }}
-                                    </x-dropdown-link>
-                                    @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
-                                        <x-dropdown-link href="{{ route('teams.create') }}">
-                                            {{ __('Create New Team') }}
-                                        </x-dropdown-link>
-                                    @endcan
-                                    @if (Auth::user()->allTeams()->count() > 1)
-                                        <div class="border-t border-gray-200"></div>
-                                        <div class="block px-4 py-2 text-xs text-gray-400">{{ __('Switch Teams') }}</div>
-                                        @foreach (Auth::user()->allTeams() as $team)
-                                            <x-switchable-team :team="$team" />
-                                        @endforeach
-                                    @endif
-                                </div>
+                                <div class="block px-4 py-2 text-xs text-gray-400">{{ __('Manage Account') }}</div>
+                                <x-dropdown-link href="{{ route('profile.show') }}">{{ __('Profile') }}</x-dropdown-link>
+                                <x-dropdown-link href="{{ route('customer.orders.index') }}">{{ __('My Orders') }}</x-dropdown-link>
+                                @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
+                                    <x-dropdown-link href="{{ route('api-tokens.index') }}">{{ __('API Tokens') }}</x-dropdown-link>
+                                @endif
+                                <div class="border-t border-gray-200"></div>
+                                <form method="POST" action="{{ route('logout') }}" x-data>
+                                    @csrf
+                                    <x-dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();">{{ __('Log Out') }}</x-dropdown-link>
+                                </form>
                             </x-slot>
                         </x-dropdown>
                     </div>
-                @endif
-
-                <!-- Settings Dropdown -->
-                <div class="relative hidden md:block">
-                    <x-dropdown align="right" width="48">
-                        <x-slot name="trigger">
-                            @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-                                <button class="flex text-sm border-2 border-transparent rounded-full focus:outline-none transition">
-                                    <img class="h-8 w-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
-                                </button>
-                            @else
-                                <button class="inline-flex items-center px-3 py-2 text-sm font-medium bg-transparent hover:text-yellow-500 focus:outline-none transition">
-                                    {{ Auth::user()->name }}
-                                    <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                    </svg>
-                                </button>
-                            @endif
-                        </x-slot>
-                        <x-slot name="content">
-                            <div class="block px-4 py-2 text-xs text-gray-400">{{ __('Manage Account') }}</div>
-                            <x-dropdown-link href="{{ route('profile.show') }}">{{ __('Profile') }}</x-dropdown-link>
-                            @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
-                                <x-dropdown-link href="{{ route('api-tokens.index') }}">{{ __('API Tokens') }}</x-dropdown-link>
-                            @endif
-                            <div class="border-t border-gray-200"></div>
-                            <form method="POST" action="{{ route('logout') }}" x-data>
-                                @csrf
-                                <x-dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();">{{ __('Log Out') }}</x-dropdown-link>
-                            </form>
-                        </x-slot>
-                    </x-dropdown>
-                </div>
+                @else
+                    <!-- Login/Register Links for non-authenticated users -->
+                    <div class="hidden md:flex items-center space-x-4">
+                        <a href="{{ route('login') }}" class="text-sm font-medium hover:text-yellow-500">Login</a>
+                        <a href="{{ route('register') }}" class="text-sm font-medium hover:text-yellow-500">Register</a>
+                    </div>
+                @endauth
 
                 <!-- Icons -->
                 <button class="hover:text-yellow-500 md:block">
@@ -101,6 +110,23 @@
                             d="M21 21l-4.35-4.35M16.65 16.65A7.5 7.5 0 1110 2.5a7.5 7.5 0 016.65 14.15z" />
                     </svg>
                 </button>
+                @auth
+                    <a href="{{ route('cart.index') }}" class="relative hover:text-yellow-500 md:block">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l3-8H6.4M7 13L5.4 5M7 13l-2 9m12-9l-2 9M9 22a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z" />
+                        </svg>
+                        @php
+                            $__cartItems = session('cart', []);
+                            $__cartCount = 0;
+                            foreach ($__cartItems as $__item) {
+                                $__cartCount += (int) ($__item['quantity'] ?? 0);
+                            }
+                        @endphp
+                        @if($__cartCount > 0)
+                            <span class="absolute -top-2 -right-2 min-w-5 h-5 px-1 rounded-full bg-red-600 text-white text-xs flex items-center justify-center">{{ $__cartCount }}</span>
+                        @endif
+                    </a>
+                @endauth
                 <a href="tel:+94112223344" class="hover:text-yellow-500 md:block">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

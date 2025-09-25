@@ -25,9 +25,10 @@
                 <div>
                     <h1 class="text-2xl font-bold mb-2">{{ $product->name }}</h1>
                     <div class="text-xl text-[#506c2a] font-semibold mb-4">${{ number_format($product->price, 2) }}</div>
-                    @if(!empty($product->description))
-                        <p class="text-gray-700 mb-4">{{ $product->description }}</p>
-                    @endif
+                    <div class="mb-4">
+                        <h2 class="text-lg font-semibold mb-2">Description</h2>
+                        <p class="text-gray-700 whitespace-pre-line">{{ $product->description ?: 'No description available.' }}</p>
+                    </div>
                     @php $qty = (int)($product->qty ?? 0); @endphp
                     <div class="mb-6 text-sm">
                         @if($qty === 0)
@@ -39,7 +40,10 @@
                         @endif
                     </div>
                     @if($qty > 0)
-                        <a href="#booking" class="inline-block bg-[#506c2a] text-white px-6 py-3 rounded-full">Order Now</a>
+                        <form method="POST" action="{{ route('cart.add', $product->getKey()) }}">
+                            @csrf
+                            <button type="submit" class="inline-block bg-[#506c2a] text-white px-6 py-3 rounded-full">Add to Cart</button>
+                        </form>
                     @else
                         <span class="inline-block bg-gray-300 text-gray-600 px-6 py-3 rounded-full" aria-disabled="true">Out of Stock</span>
                     @endif
