@@ -159,6 +159,67 @@
         </div>
     </div>
 
+    <!-- Mobile menu -->
+    <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="md:hidden">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/95 backdrop-blur-md border-t border-gray-200">
+            <!-- Mobile Navigation Links -->
+            <a href="{{ url('/about') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">About Us</a>
+            <a href="{{ url('/services') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">Services</a>
+            <a href="{{ url('/membership') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">Membership</a>
+            <a href="{{ url('/contact') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">Contact Us</a>
+            <a href="{{ url('/products') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">Products</a>
+            
+            <!-- Mobile Auth Links -->
+            @auth
+                <div class="border-t border-gray-200 pt-4 pb-3">
+                    <div class="flex items-center px-3">
+                        <div class="flex-shrink-0">
+                            @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
+                                <img class="h-10 w-10 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
+                            @else
+                                <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                    <span class="text-sm font-medium text-gray-700">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="ml-3">
+                            <div class="text-base font-medium text-gray-800">{{ Auth::user()->name }}</div>
+                            <div class="text-sm font-medium text-gray-500">{{ Auth::user()->email }}</div>
+                        </div>
+                    </div>
+                    <div class="mt-3 px-2 space-y-1">
+                        <a href="{{ route('profile.show') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">Profile</a>
+                        <a href="{{ route('customer.orders.index') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">My Orders</a>
+                        <a href="{{ route('cart.index') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">
+                            Cart
+                            @php
+                                $__cartItems = session('cart', []);
+                                $__cartCount = 0;
+                                foreach ($__cartItems as $__item) {
+                                    $__cartCount += (int) ($__item['quantity'] ?? 0);
+                                }
+                            @endphp
+                            @if($__cartCount > 0)
+                                <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ $__cartCount }}</span>
+                            @endif
+                        </a>
+                        <form method="POST" action="{{ route('logout') }}" class="block">
+                            @csrf
+                            <button type="submit" class="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">Log Out</button>
+                        </form>
+                    </div>
+                </div>
+            @else
+                <div class="border-t border-gray-200 pt-4 pb-3">
+                    <div class="px-2 space-y-1">
+                        <a href="{{ route('login') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">Login</a>
+                        <a href="{{ route('register') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">Register</a>
+                    </div>
+                </div>
+            @endauth
+        </div>
+    </div>
+
     <!-- JavaScript for dynamic nav text color -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
