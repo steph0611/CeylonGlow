@@ -115,3 +115,4 @@ class AdminBookingController extends Controller
         ]);
     }
 }
+

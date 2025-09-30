@@ -104,3 +104,4 @@ class BookingController extends Controller
             ->with('success', 'Booking deleted successfully.');
     }
 }
+
