@@ -109,7 +109,7 @@ return [
         'mongodb' => [
             'driver'   => 'mongodb',
             'dsn'      => 'mongodb+srv://20060623Stevie:20060623Stevie@cluster0.uizudyu.mongodb.net/ceylonglow?retryWrites=true&w=majority',
-            'database' => 'ceylonglow',
+            'database' => 'CEYLONGLOW_DB',
         ],
 
 
