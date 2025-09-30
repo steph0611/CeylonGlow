@@ -1,30 +1,46 @@
 <nav 
     x-data="{ open: false, navColor: 'black' }" 
-    :class="navColor === 'black' ? 'text-black md:text-black text-black' : 'text-white md:text-white text-black'"
-    class="bg-transparent md:bg-transparent bg-white backdrop-blur-md shadow fixed w-full z-50 border-b border-transparent md:border-transparent border-gray-200 transition-colors duration-300"
+    :class="navColor === 'black' ? 'text-gray-800 md:text-gray-800 text-gray-800' : 'text-white md:text-white text-gray-800'"
+    class="bg-white/95 md:bg-transparent bg-white backdrop-blur-lg shadow-lg md:shadow-none fixed w-full z-50 border-b border-gray-200 md:border-transparent transition-all duration-300"
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
 
             <!-- Logo (left) -->
             <div class="flex-shrink-0">
-                <a href="{{ route('dashboard') }}">
-                    <img src="{{ asset('images/logo.png') }}" alt="Ceylon Glow Logo" class="h-10">
+                <a href="{{ route('dashboard') }}" class="flex items-center space-x-2 group">
+                    <img src="{{ asset('images/Logo.png') }}" alt="Ceylon Glow Logo" class="h-10 w-auto transition-transform duration-200 group-hover:scale-105">
+                    <span class="hidden sm:block text-xl font-bold tracking-tight">Ceylon Glow</span>
                 </a>
             </div>
 
             <!-- Navigation Links (center) -->
-            <div class="hidden md:flex space-x-10 font-medium mix-blend-difference">
-                <a href="{{ url('/about') }}" class="hover:text-yellow-500">About Us</a>
-                <a href="{{ url('/services') }}" class="hover:text-yellow-500">Services</a>
-                <a href="{{ url('/membership') }}" class="hover:text-yellow-500">Membership</a>
-                <a href="{{ url('/contact') }}" class="hover:text-yellow-500">Contact Us</a>
-                <a href="{{ url('/products') }}" class="hover:text-yellow-500">Products</a>
+            <div class="hidden md:flex items-center space-x-8 font-medium">
+                <a href="{{ url('/about') }}" class="relative px-3 py-2 text-sm font-medium transition-all duration-200 hover:text-amber-600 hover:scale-105">
+                    <span class="relative z-10">About Us</span>
+                    <span class="absolute inset-0 bg-amber-50 rounded-lg opacity-0 transition-opacity duration-200 hover:opacity-100"></span>
+                </a>
+                <a href="{{ url('/services') }}" class="relative px-3 py-2 text-sm font-medium transition-all duration-200 hover:text-amber-600 hover:scale-105">
+                    <span class="relative z-10">Services</span>
+                    <span class="absolute inset-0 bg-amber-50 rounded-lg opacity-0 transition-opacity duration-200 hover:opacity-100"></span>
+                </a>
+                <a href="{{ url('/membership') }}" class="relative px-3 py-2 text-sm font-medium transition-all duration-200 hover:text-amber-600 hover:scale-105">
+                    <span class="relative z-10">Membership</span>
+                    <span class="absolute inset-0 bg-amber-50 rounded-lg opacity-0 transition-opacity duration-200 hover:opacity-100"></span>
+                </a>
+                <a href="{{ url('/contact') }}" class="relative px-3 py-2 text-sm font-medium transition-all duration-200 hover:text-amber-600 hover:scale-105">
+                    <span class="relative z-10">Contact Us</span>
+                    <span class="absolute inset-0 bg-amber-50 rounded-lg opacity-0 transition-opacity duration-200 hover:opacity-100"></span>
+                </a>
+                <a href="{{ url('/products') }}" class="relative px-3 py-2 text-sm font-medium transition-all duration-200 hover:text-amber-600 hover:scale-105">
+                    <span class="relative z-10">Products</span>
+                    <span class="absolute inset-0 bg-amber-50 rounded-lg opacity-0 transition-opacity duration-200 hover:opacity-100"></span>
+                </a>
             </div>
 
 
             <!-- Right Side: Profile, Teams, and Icons -->
-            <div class="flex items-center space-x-4 mix-blend-difference md:mix-blend-difference mix-blend-normal">
+            <div class="flex items-center space-x-3">
 
                 @auth
                     <!-- Teams Dropdown -->
@@ -97,22 +113,22 @@
                     </div>
                 @else
                     <!-- Login/Register Links for non-authenticated users -->
-                    <div class="hidden md:flex items-center space-x-4">
-                        <a href="{{ route('login') }}" class="text-sm font-medium hover:text-yellow-500">Login</a>
-                        <a href="{{ route('register') }}" class="text-sm font-medium hover:text-yellow-500">Register</a>
+                    <div class="hidden md:flex items-center space-x-3">
+                        <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-amber-600 transition-colors duration-200">Login</a>
+                        <a href="{{ route('register') }}" class="px-4 py-2 text-sm font-medium bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-all duration-200 hover:scale-105 shadow-sm">Register</a>
                     </div>
                 @endauth
 
                 <!-- Icons -->
-                <button class="hover:text-yellow-500 md:block text-gray-600 md:text-current">
+                <button class="p-2 rounded-lg hover:bg-gray-100 transition-all duration-200 hover:scale-105 text-gray-600 hover:text-amber-600" title="Search">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M21 21l-4.35-4.35M16.65 16.65A7.5 7.5 0 1110 2.5a7.5 7.5 0 016.65 14.15z" />
                     </svg>
                 </button>
                 @auth
-                    <a href="{{ route('cart.index') }}" class="relative hover:text-yellow-500 md:block text-gray-600 md:text-current">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <a href="{{ route('cart.index') }}" class="relative p-2 rounded-lg hover:bg-gray-100 transition-all duration-200 hover:scale-105 text-gray-600 hover:text-amber-600" title="Shopping Cart">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l3-8H6.4M7 13L5.4 5M7 13l-2 9m12-9l-2 9M9 22a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z" />
                         </svg>
                         @php
@@ -123,23 +139,23 @@
                             }
                         @endphp
                         @if($__cartCount > 0)
-                            <span class="absolute -top-2 -right-2 min-w-5 h-5 px-1 rounded-full bg-red-600 text-white text-xs flex items-center justify-center">{{ $__cartCount }}</span>
+                            <span class="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-medium shadow-sm">{{ $__cartCount }}</span>
                         @endif
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="relative hover:text-yellow-500 md:block text-gray-600 md:text-current" title="Login to access cart">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <a href="{{ route('login') }}" class="relative p-2 rounded-lg hover:bg-gray-100 transition-all duration-200 hover:scale-105 text-gray-600 hover:text-amber-600" title="Login to access cart">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l3-8H6.4M7 13L5.4 5M7 13l-2 9m12-9l-2 9M9 22a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z" />
                         </svg>
                     </a>
                 @endauth
-                <a href="tel:+94112223344" class="hover:text-yellow-500 md:block text-gray-600 md:text-current">
+                <a href="tel:+94112223344" class="p-2 rounded-lg hover:bg-gray-100 transition-all duration-200 hover:scale-105 text-gray-600 hover:text-amber-600" title="Call Us">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 5a2 2 0 012-2h3.28a2 2 0 011.94 1.45l1.1 4.4a2 2 0 01-.45 1.82l-2.2 2.2a16.001 16.001 0 006.59 6.59l2.2-2.2a2 2 0 011.82-.45l4.4 1.1a2 2 0 011.45 1.94V19a2 2 0 01-2 2h-1C10.07 21 3 13.93 3 5z" />
                     </svg>
                 </a>
-                <a href="mailto:info@ceylonglow.com" class="hover:text-yellow-500 md:block text-gray-600 md:text-current">
+                <a href="mailto:info@ceylonglow.com" class="p-2 rounded-lg hover:bg-gray-100 transition-all duration-200 hover:scale-105 text-gray-600 hover:text-amber-600" title="Email Us">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -148,8 +164,8 @@
             </div>
 
             <!-- Mobile Hamburger -->
-            <div class="-me-2 flex items-center md:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none transition duration-150 ease-in-out">
+            <div class="flex items-center md:hidden">
+                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-lg text-gray-600 hover:text-amber-600 hover:bg-gray-100 focus:outline-none transition-all duration-200 hover:scale-105">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -160,60 +176,62 @@
     </div>
 
     <!-- Mobile menu -->
-    <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="md:hidden">
-        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/95 backdrop-blur-md border-t border-gray-200">
+    <div x-show="open" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-2" class="md:hidden">
+        <div class="px-4 pt-4 pb-6 space-y-2 bg-white border-t border-gray-200 shadow-lg">
             <!-- Mobile Navigation Links -->
-            <a href="{{ url('/about') }}" @click="open = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">About Us</a>
-            <a href="{{ url('/services') }}" @click="open = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">Services</a>
-            <a href="{{ url('/membership') }}" @click="open = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">Membership</a>
-            <a href="{{ url('/contact') }}" @click="open = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">Contact Us</a>
-            <a href="{{ url('/products') }}" @click="open = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">Products</a>
+            <a href="{{ url('/about') }}" @click="open = false" class="block px-4 py-3 text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 hover:scale-[1.02]">About Us</a>
+            <a href="{{ url('/services') }}" @click="open = false" class="block px-4 py-3 text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 hover:scale-[1.02]">Services</a>
+            <a href="{{ url('/membership') }}" @click="open = false" class="block px-4 py-3 text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 hover:scale-[1.02]">Membership</a>
+            <a href="{{ url('/contact') }}" @click="open = false" class="block px-4 py-3 text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 hover:scale-[1.02]">Contact Us</a>
+            <a href="{{ url('/products') }}" @click="open = false" class="block px-4 py-3 text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 hover:scale-[1.02]">Products</a>
             
             <!-- Mobile Auth Links -->
             @auth
                 <div class="border-t border-gray-200 pt-4 pb-3">
-                    <div class="flex items-center px-3">
+                    <div class="flex items-center px-4 py-3 bg-gray-50 rounded-lg mx-2">
                         <div class="flex-shrink-0">
                             @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-                                <img class="h-10 w-10 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
+                                <img class="h-12 w-12 rounded-full object-cover ring-2 ring-amber-200" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                             @else
-                                <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-                                    <span class="text-sm font-medium text-gray-700">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                                <div class="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center ring-2 ring-amber-200">
+                                    <span class="text-lg font-semibold text-amber-700">{{ substr(Auth::user()->name, 0, 1) }}</span>
                                 </div>
                             @endif
                         </div>
-                        <div class="ml-3">
-                            <div class="text-base font-medium text-gray-800">{{ Auth::user()->name }}</div>
-                            <div class="text-sm font-medium text-gray-500">{{ Auth::user()->email }}</div>
+                        <div class="ml-4">
+                            <div class="text-base font-semibold text-gray-800">{{ Auth::user()->name }}</div>
+                            <div class="text-sm text-gray-500">{{ Auth::user()->email }}</div>
                         </div>
                     </div>
-                    <div class="mt-3 px-2 space-y-1">
-                        <a href="{{ route('profile.show') }}" @click="open = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">Profile</a>
-                        <a href="{{ route('customer.orders.index') }}" @click="open = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">My Orders</a>
-                        <a href="{{ route('cart.index') }}" @click="open = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">
-                            Cart
-                            @php
-                                $__cartItems = session('cart', []);
-                                $__cartCount = 0;
-                                foreach ($__cartItems as $__item) {
-                                    $__cartCount += (int) ($__item['quantity'] ?? 0);
-                                }
-                            @endphp
-                            @if($__cartCount > 0)
-                                <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ $__cartCount }}</span>
-                            @endif
+                    <div class="mt-4 space-y-2">
+                        <a href="{{ route('profile.show') }}" @click="open = false" class="block px-4 py-3 text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 hover:scale-[1.02]">Profile</a>
+                        <a href="{{ route('customer.orders.index') }}" @click="open = false" class="block px-4 py-3 text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 hover:scale-[1.02]">My Orders</a>
+                        <a href="{{ route('cart.index') }}" @click="open = false" class="block px-4 py-3 text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 hover:scale-[1.02]">
+                            <span class="flex items-center justify-between">
+                                <span>Cart</span>
+                                @php
+                                    $__cartItems = session('cart', []);
+                                    $__cartCount = 0;
+                                    foreach ($__cartItems as $__item) {
+                                        $__cartCount += (int) ($__item['quantity'] ?? 0);
+                                    }
+                                @endphp
+                                @if($__cartCount > 0)
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-500 text-white">{{ $__cartCount }}</span>
+                                @endif
+                            </span>
                         </a>
                         <form method="POST" action="{{ route('logout') }}" class="block">
                             @csrf
-                            <button type="submit" @click="open = false" class="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">Log Out</button>
+                            <button type="submit" @click="open = false" class="block w-full text-left px-4 py-3 text-base font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 hover:scale-[1.02]">Log Out</button>
                         </form>
                     </div>
                 </div>
             @else
                 <div class="border-t border-gray-200 pt-4 pb-3">
-                    <div class="px-2 space-y-1">
-                        <a href="{{ route('login') }}" @click="open = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">Login</a>
-                        <a href="{{ route('register') }}" @click="open = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-500 hover:bg-gray-50 rounded-md">Register</a>
+                    <div class="space-y-2">
+                        <a href="{{ route('login') }}" @click="open = false" class="block px-4 py-3 text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 hover:scale-[1.02]">Login</a>
+                        <a href="{{ route('register') }}" @click="open = false" class="block px-4 py-3 text-base font-medium bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-all duration-200 hover:scale-[1.02] text-center">Register</a>
                     </div>
                 </div>
             @endauth
