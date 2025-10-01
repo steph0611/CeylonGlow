@@ -17,7 +17,9 @@
 </head>
 <body class="antialiased text-gray-900">
 
-  
+    {{-- Include Navigation --}}
+    @include('navigation-menu')
+
 
 
     <section class="relative h-screen w-full overflow-hidden">
