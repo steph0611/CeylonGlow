@@ -23,9 +23,15 @@
 
 
     <section class="relative h-screen w-full overflow-hidden">
-        <!-- Background video -->
-        <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+        <!-- Desktop Background video -->
+        <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover hidden md:block">
             <source src="{{ asset('videos/hero-video.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        
+        <!-- Mobile Background video -->
+        <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover block md:hidden">
+            <source src="{{ asset('videos/mobilehero.mp4') }}" type="video/mp4">
             Your browser does not support the video tag.
         </video>
 
