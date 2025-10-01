@@ -24,13 +24,13 @@
 
     <section class="relative h-screen w-full overflow-hidden">
         <!-- Desktop Background video -->
-        <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover hidden md:block">
+        <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-contain hidden md:block">
             <source src="{{ asset('videos/hero-video.mp4') }}" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         
         <!-- Mobile Background video -->
-        <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover block md:hidden">
+        <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-contain block md:hidden">
             <source src="{{ asset('videos/mobilehero.mp4') }}" type="video/mp4">
             Your browser does not support the video tag.
         </video>
