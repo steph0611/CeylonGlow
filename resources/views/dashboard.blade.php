@@ -39,19 +39,7 @@
         <div class="absolute inset-0 bg-black/40"></div>
 
         <!-- Content centered on screen -->
-        <div class="relative z-10 h-full px-4">
-            <div class="absolute bottom-5 left-1/2 transform -translate-x-1/2 max-w-xl text-center">
-                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 text-white">
-                    A DIFFERENT<br>DIMENSION
-                </h1>
-                <p class="muted mb-8 text-gray-200 text-lg">
-                    Here we care for your appearance, give strength to beauty and youth,
-                    and help you find inner peace and clarity. We warmly welcome everyone
-                    who wants to restore freshness and radiance to their skin.
-                </p>
-                <a href="#booking" class="btn-primary inline-block">BOOK ONLINE</a>
-            </div>
-        </div>
+       
     </section>
 
 
