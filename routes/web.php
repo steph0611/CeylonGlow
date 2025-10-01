@@ -105,6 +105,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
     Route::delete('/cart/remove/{product}', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/order', [CartController::class, 'placeOrder'])->name('cart.order');
+    
+    // Checkout routes
+    Route::post('/checkout/buy-now', [App\Http\Controllers\CheckoutController::class, 'buyNow'])->name('checkout.buy-now');
+    Route::get('/checkout', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/process', [App\Http\Controllers\CheckoutController::class, 'processPayment'])->name('checkout.process');
+    Route::get('/checkout/success/{order}', [App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
 });
  
 

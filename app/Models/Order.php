@@ -17,6 +17,7 @@ class Order extends Model
         'placed_at',
         'notes',
         'shipping_address',
+        'billing_address',
         'payment_method'
     ];
 

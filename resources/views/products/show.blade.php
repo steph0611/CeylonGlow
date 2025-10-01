@@ -39,17 +39,67 @@
                             <span class="text-gray-600">In stock: {{ $product->qty }}</span>
                         @endif
                     </div>
+                    
                     @if($qty > 0)
                         @auth
-                            <form method="POST" action="{{ route('cart.add', $product->getKey()) }}">
-                                @csrf
-                                <button type="submit" class="inline-block bg-[#506c2a] text-white px-6 py-3 rounded-full">Add to Cart</button>
-                            </form>
+                            <div x-data="{ quantity: 1, maxQuantity: {{ $qty }}, totalPrice: {{ $product->price }} }" x-init="$watch('quantity', value => totalPrice = (value * {{ $product->price }}).toFixed(2))">
+                                <!-- Quantity Selector -->
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+                                    <div class="flex items-center space-x-3">
+                                        <button @click="if(quantity > 1) quantity--" type="button" class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                                            </svg>
+                                        </button>
+                                        <input x-model="quantity" type="number" min="1" :max="maxQuantity" class="w-16 text-center border border-gray-300 rounded-lg py-2 focus:ring-2 focus:ring-[#506c2a] focus:border-transparent">
+                                        <button @click="if(quantity < maxQuantity) quantity++" type="button" class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mt-1">Total: $<span x-text="totalPrice"></span></p>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <!-- Add to Cart Button -->
+                                    <form method="POST" action="{{ route('cart.add', $product->getKey()) }}" class="flex-1">
+                                        @csrf
+                                        <input type="hidden" name="quantity" :value="quantity">
+                                        <button type="submit" class="w-full bg-[#506c2a] text-white px-6 py-3 rounded-lg hover:bg-[#3e541f] transition-colors duration-200 flex items-center justify-center">
+                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l3-8H6.4M7 13L5.4 5M7 13l-2 9m12-9l-2 9M9 22a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"></path>
+                                            </svg>
+                                            Add to Cart
+                                        </button>
+                                    </form>
+
+                                    <!-- Buy Now Button -->
+                                    <form method="POST" action="{{ route('checkout.buy-now') }}" class="flex-1">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <input type="hidden" name="quantity" :value="quantity">
+                                        <button type="submit" class="w-full bg-amber-600 text-white px-6 py-3 rounded-lg hover:bg-amber-700 transition-colors duration-200 flex items-center justify-center">
+                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                            </svg>
+                                            Buy Now
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         @else
-                            <a href="{{ route('login') }}" class="inline-block bg-[#506c2a] text-white px-6 py-3 rounded-full">Login to Add to Cart</a>
+                            <div class="space-y-3">
+                                <div class="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                                    <p class="text-amber-800 text-sm">Please login to purchase this product</p>
+                                </div>
+                                <a href="{{ route('login') }}" class="inline-block bg-[#506c2a] text-white px-6 py-3 rounded-lg hover:bg-[#3e541f] transition-colors duration-200">Login to Purchase</a>
+                            </div>
                         @endauth
                     @else
-                        <span class="inline-block bg-gray-300 text-gray-600 px-6 py-3 rounded-full" aria-disabled="true">Out of Stock</span>
+                        <span class="inline-block bg-gray-300 text-gray-600 px-6 py-3 rounded-lg" aria-disabled="true">Out of Stock</span>
                     @endif
                 </div>
             </div>
