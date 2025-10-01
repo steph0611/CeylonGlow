@@ -166,7 +166,7 @@
     <!-- Special Offers -->
     <section class="py-12">
         <div class="max-w-6xl mx-auto px-4">
-            <h3 class="text-xl md:text-2xl font-semibold mb-6">Special Product Offers</h3>
+            <h3 class="text-xl md:text-2xl font-semibold mb-6">Special Prodsdfsdfsdfsddfuct Offers</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
                 <div class="relative">
                     <img src="{{ asset('images/offer-1.png') }}" class="w-full h-64 object-cover rounded" alt="Product Offer 1">
