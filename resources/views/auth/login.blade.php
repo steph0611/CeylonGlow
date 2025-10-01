@@ -2,19 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ceylon Glow - Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-black min-h-screen flex items-center justify-center">
-  <div class="bg-black text-white w-full max-w-5xl rounded-lg flex shadow-lg overflow-hidden">
+<body class="bg-black min-h-screen flex items-center justify-center p-4">
+  <div class="bg-black text-white w-full max-w-5xl rounded-lg shadow-lg overflow-hidden">
     
-    <!-- Left: Logo and Name -->
-    <div class="w-1/2 bg-black flex flex-col items-center justify-center p-10 text-center">
-      <img src="{{ asset('images/Logo.png') }}" alt="Logo" class="w-72 mb-6">
-    </div>
+    <!-- Mobile: Logo on top, Desktop: Logo on left -->
+    <div class="flex flex-col lg:flex-row">
+      <!-- Logo Section -->
+      <div class="w-full lg:w-1/2 bg-black flex flex-col items-center justify-center p-6 lg:p-10 text-center">
+        <img src="{{ asset('images/Logo.png') }}" alt="Logo" class="w-48 sm:w-64 lg:w-72 mb-4 lg:mb-6">
+      </div>
 
-    <!-- Right: Login Form -->
-    <div class="w-1/2 bg-black p-10">
+      <!-- Login Form Section -->
+      <div class="w-full lg:w-1/2 bg-black p-6 lg:p-10">
       <h2 class="text-2xl font-semibold mb-6">LOGIN</h2>
 
       <!-- Validation Errors -->
@@ -67,6 +70,7 @@
         Don't have an account?
         <a href="{{ route('register') }}" class="text-white underline">Register</a>
       </p>
+      </div>
     </div>
 
   </div>
