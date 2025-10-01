@@ -45,7 +45,8 @@ class CheckoutController extends Controller
             }
 
             // Store the buy now data in session
-            $request->session()->put('buy_now', [
+            $request->session()->put('checkout_data', [
+                'type' => 'single_product',
                 'product_id' => $productId,
                 'quantity' => $quantity,
                 'product' => [
@@ -63,21 +64,97 @@ class CheckoutController extends Controller
         }
     }
 
+    public function cartCheckout(Request $request): RedirectResponse
+    {
+        $cart = $request->session()->get('cart', []);
+        $selectedKeys = $request->session()->get('cart_selected', []);
+        
+        if (empty($cart)) {
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+        }
+
+        // If no items are selected, select all items
+        if (empty($selectedKeys)) {
+            $selectedKeys = array_keys($cart);
+        }
+
+        $items = [];
+        $total = 0.0;
+        
+        foreach ($cart as $key => $item) {
+            if (!in_array($key, $selectedKeys, true)) {
+                continue; // Skip unselected items
+            }
+            
+            $qty = (int) ($item['quantity'] ?? 0);
+            $lineTotal = (float) ($item['price'] ?? 0) * $qty;
+            $total += $lineTotal;
+            $items[] = [
+                'product_id' => (int) $key,
+                'name' => (string) ($item['name'] ?? ''),
+                'price' => (float) ($item['price'] ?? 0),
+                'quantity' => $qty,
+                'line_total' => $lineTotal,
+                'image' => $item['image'] ?? asset('images/service-1.jpg'),
+            ];
+        }
+
+        if (empty($items)) {
+            return redirect()->route('cart.index')->with('error', 'No items selected for checkout.');
+        }
+
+        // Store the cart checkout data in session
+        $request->session()->put('checkout_data', [
+            'type' => 'cart',
+            'items' => $items,
+            'total' => $total,
+            'selected_keys' => $selectedKeys,
+        ]);
+
+        return redirect()->route('checkout.index');
+    }
+
     public function index(Request $request): View
     {
-        $buyNowData = $request->session()->get('buy_now');
+        $checkoutData = $request->session()->get('checkout_data');
         
-        if (!$buyNowData) {
+        if (!$checkoutData) {
             return redirect()->route('products.index')->with('error', 'No items to checkout.');
         }
 
-        $product = $buyNowData['product'];
-        $quantity = $buyNowData['quantity'];
-        $subtotal = $product['price'] * $quantity;
-        $tax = $subtotal * 0.1; // 10% tax
-        $total = $subtotal + $tax;
-
-        return view('checkout.index', compact('product', 'quantity', 'subtotal', 'tax', 'total'));
+        if ($checkoutData['type'] === 'single_product') {
+            $product = $checkoutData['product'];
+            $quantity = $checkoutData['quantity'];
+            $subtotal = $product['price'] * $quantity;
+            $tax = $subtotal * 0.1; // 10% tax
+            $total = $subtotal + $tax;
+            
+            return view('checkout.index', [
+                'type' => 'single_product',
+                'product' => $product,
+                'quantity' => $quantity,
+                'subtotal' => $subtotal,
+                'tax' => $tax,
+                'total' => $total,
+                'items' => null
+            ]);
+        } else {
+            // Cart checkout
+            $items = $checkoutData['items'];
+            $subtotal = $checkoutData['total'];
+            $tax = $subtotal * 0.1; // 10% tax
+            $total = $subtotal + $tax;
+            
+            return view('checkout.index', [
+                'type' => 'cart',
+                'items' => $items,
+                'subtotal' => $subtotal,
+                'tax' => $tax,
+                'total' => $total,
+                'product' => null,
+                'quantity' => null
+            ]);
+        }
     }
 
     public function processPayment(Request $request): RedirectResponse
@@ -92,9 +169,9 @@ class CheckoutController extends Controller
             'shipping_address' => 'required|string|max:500',
         ]);
 
-        $buyNowData = $request->session()->get('buy_now');
+        $checkoutData = $request->session()->get('checkout_data');
         
-        if (!$buyNowData) {
+        if (!$checkoutData) {
             return redirect()->route('products.index')->with('error', 'No items to checkout.');
         }
 
@@ -103,12 +180,6 @@ class CheckoutController extends Controller
             if (!$user) {
                 return back()->with('error', 'You must be logged in to complete the purchase.');
             }
-
-            $product = $buyNowData['product'];
-            $quantity = $buyNowData['quantity'];
-            $subtotal = $product['price'] * $quantity;
-            $tax = $subtotal * 0.1;
-            $total = $subtotal + $tax;
 
             // Process payment based on method
             if ($request->input('payment_method') === 'card') {
@@ -119,42 +190,103 @@ class CheckoutController extends Controller
                 }
             }
 
-            // Update product stock
-            DB::transaction(function () use ($buyNowData) {
-                $product = Product::lockForUpdate()->find($buyNowData['product_id']);
-                if ($product) {
-                    $currentQty = (int) ($product->qty ?? 0);
-                    $product->qty = $currentQty - $buyNowData['quantity'];
-                    $product->save();
+            if ($checkoutData['type'] === 'single_product') {
+                // Single product checkout
+                $product = $checkoutData['product'];
+                $quantity = $checkoutData['quantity'];
+                $subtotal = $product['price'] * $quantity;
+                $tax = $subtotal * 0.1;
+                $total = $subtotal + $tax;
+
+                // Update product stock
+                DB::transaction(function () use ($checkoutData) {
+                    $product = Product::lockForUpdate()->find($checkoutData['product_id']);
+                    if ($product) {
+                        $currentQty = (int) ($product->qty ?? 0);
+                        $product->qty = $currentQty - $checkoutData['quantity'];
+                        $product->save();
+                    }
+                });
+
+                // Create order
+                $order = Order::create([
+                    'customer' => [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'email' => $user->email,
+                    ],
+                    'items' => [
+                        [
+                            'product_id' => $product['id'],
+                            'name' => $product['name'],
+                            'price' => $product['price'],
+                            'quantity' => $quantity,
+                            'line_total' => $subtotal,
+                        ]
+                    ],
+                    'total' => $total,
+                    'status' => $request->input('payment_method') === 'card' ? 'paid' : 'pending',
+                    'payment_method' => $request->input('payment_method'),
+                    'billing_address' => $request->input('billing_address'),
+                    'shipping_address' => $request->input('shipping_address'),
+                    'placed_at' => now()->toDateTimeString(),
+                ]);
+
+            } else {
+                // Cart checkout
+                $items = $checkoutData['items'];
+                $subtotal = $checkoutData['total'];
+                $tax = $subtotal * 0.1;
+                $total = $subtotal + $tax;
+
+                // Update product stock for all items
+                DB::transaction(function () use ($items) {
+                    foreach ($items as $item) {
+                        $product = Product::lockForUpdate()->find($item['product_id']);
+                        if ($product) {
+                            $currentQty = (int) ($product->qty ?? 0);
+                            $product->qty = $currentQty - $item['quantity'];
+                            $product->save();
+                        }
+                    }
+                });
+
+                // Create order
+                $order = Order::create([
+                    'customer' => [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'email' => $user->email,
+                    ],
+                    'items' => $items,
+                    'total' => $total,
+                    'status' => $request->input('payment_method') === 'card' ? 'paid' : 'pending',
+                    'payment_method' => $request->input('payment_method'),
+                    'billing_address' => $request->input('billing_address'),
+                    'shipping_address' => $request->input('shipping_address'),
+                    'placed_at' => now()->toDateTimeString(),
+                ]);
+
+                // Remove ordered items from cart
+                $cart = $request->session()->get('cart', []);
+                $selectedKeys = $checkoutData['selected_keys'];
+                $remainingCart = $cart;
+                foreach ($selectedKeys as $key) {
+                    unset($remainingCart[$key]);
                 }
-            });
+                $request->session()->put('cart', $remainingCart);
+                
+                // Update selected items
+                $remainingSelected = array_values(array_filter($request->session()->get('cart_selected', []), fn($k) => !in_array($k, $selectedKeys)));
+                if (empty($remainingSelected)) {
+                    $request->session()->forget('cart_selected');
+                } else {
+                    $request->session()->put('cart_selected', $remainingSelected);
+                }
+            }
 
-            // Create order
-            $order = Order::create([
-                'customer' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                ],
-                'items' => [
-                    [
-                        'product_id' => $product['id'],
-                        'name' => $product['name'],
-                        'price' => $product['price'],
-                        'quantity' => $quantity,
-                        'line_total' => $subtotal,
-                    ]
-                ],
-                'total' => $total,
-                'status' => $request->input('payment_method') === 'card' ? 'paid' : 'pending',
-                'payment_method' => $request->input('payment_method'),
-                'billing_address' => $request->input('billing_address'),
-                'shipping_address' => $request->input('shipping_address'),
-                'placed_at' => now()->toDateTimeString(),
-            ]);
-
-            // Clear buy now session
-            $request->session()->forget('buy_now');
+            // Clear checkout session
+            $request->session()->forget('checkout_data');
 
             return redirect()->route('checkout.success', $order->id)
                 ->with('success', 'Order placed successfully!');

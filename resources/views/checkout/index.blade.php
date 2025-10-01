@@ -24,15 +24,31 @@
                     <div class="bg-white rounded-xl shadow p-6 sticky top-4">
                         <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
                         
-                        <!-- Product Item -->
-                        <div class="flex items-center space-x-4 mb-4 pb-4 border-b">
-                            <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="w-16 h-16 object-cover rounded-lg">
-                            <div class="flex-1">
-                                <h3 class="font-medium text-gray-900">{{ $product['name'] }}</h3>
-                                <p class="text-sm text-gray-500">Qty: {{ $quantity }}</p>
-                                <p class="text-sm font-medium text-[#506c2a]">${{ number_format($product['price'], 2) }}</p>
+                        @if($type === 'single_product')
+                            <!-- Single Product Item -->
+                            <div class="flex items-center space-x-4 mb-4 pb-4 border-b">
+                                <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="w-16 h-16 object-cover rounded-lg">
+                                <div class="flex-1">
+                                    <h3 class="font-medium text-gray-900">{{ $product['name'] }}</h3>
+                                    <p class="text-sm text-gray-500">Qty: {{ $quantity }}</p>
+                                    <p class="text-sm font-medium text-[#506c2a]">${{ number_format($product['price'], 2) }}</p>
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <!-- Cart Items -->
+                            <div class="space-y-3 mb-4 pb-4 border-b max-h-64 overflow-y-auto">
+                                @foreach($items as $item)
+                                    <div class="flex items-center space-x-3">
+                                        <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}" class="w-12 h-12 object-cover rounded-lg">
+                                        <div class="flex-1">
+                                            <h3 class="font-medium text-gray-900 text-sm">{{ $item['name'] }}</h3>
+                                            <p class="text-xs text-gray-500">Qty: {{ $item['quantity'] }}</p>
+                                            <p class="text-xs font-medium text-[#506c2a]">${{ number_format($item['line_total'], 2) }}</p>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
 
                         <!-- Price Breakdown -->
                         <div class="space-y-2 text-sm">
