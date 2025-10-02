@@ -6,17 +6,24 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
 
-            <!-- Left Side: Mobile Hamburger (visible on mobile only) -->
-            <div class="flex items-center md:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-lg text-gray-600 hover:text-amber-600 hover:bg-gray-100 focus:outline-none transition-all duration-200 hover:scale-105">
+            <!-- Left Side: Logo (Desktop) / Mobile Hamburger (Mobile) -->
+            <div class="flex items-center">
+                <!-- Mobile Hamburger (visible on mobile only) -->
+                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-lg text-gray-600 hover:text-amber-600 hover:bg-gray-100 focus:outline-none transition-all duration-200 hover:scale-105 md:hidden">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
+
+                <!-- Logo (Desktop) -->
+                <a href="{{ route('dashboard') }}" class="flex items-center space-x-2 group">
+                    <img src="{{ asset('images/Logo.png') }}" alt="Ceylon Glow Logo" class="h-10 w-auto transition-transform duration-200 group-hover:scale-105">
+                    <span class="hidden sm:block text-xl font-bold tracking-tight">Ceylon Glow</span>
+                </a>
             </div>
 
-            <!-- Desktop Navigation Links (hidden on mobile) -->
+            <!-- Center: Desktop Navigation Links (hidden on mobile) -->
             <div class="hidden md:flex items-center space-x-8 font-medium">
                 <a href="{{ url('/about') }}" class="relative px-3 py-2 text-sm font-medium transition-all duration-200 hover:text-amber-600 hover:scale-105">
                     <span class="relative z-10">About Us</span>
@@ -40,15 +47,7 @@
                 </a>
             </div>
 
-            <!-- Center: Logo -->
-            <div class="flex-shrink-0 absolute left-1/2 transform -translate-x-1/2">
-                <a href="{{ route('dashboard') }}" class="flex items-center space-x-2 group">
-                    <img src="{{ asset('images/Logo.png') }}" alt="Ceylon Glow Logo" class="h-10 w-auto transition-transform duration-200 group-hover:scale-105">
-                    <span class="hidden sm:block text-xl font-bold tracking-tight">Ceylon Glow</span>
-                </a>
-            </div>
-
-            <!-- Right Side: Profile, Teams, and Icons -->
+            <!-- Right Side: Account, Teams, and User Actions -->
             <div class="flex items-center space-x-3">
 
                 @auth
