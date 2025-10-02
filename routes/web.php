@@ -99,6 +99,21 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/customers/{customer}/edit', [App\Http\Controllers\Admin\AdminCustomerController::class, 'edit'])->name('admin.customers.edit');
     Route::put('/customers/{customer}', [App\Http\Controllers\Admin\AdminCustomerController::class, 'update'])->name('admin.customers.update');
     Route::delete('/customers/{customer}', [App\Http\Controllers\Admin\AdminCustomerController::class, 'destroy'])->name('admin.customers.destroy');
+
+    // Membership CRUD
+    Route::get('/memberships', [App\Http\Controllers\Admin\AdminMembershipController::class, 'index'])->name('admin.memberships.index');
+    Route::get('/memberships/create', [App\Http\Controllers\Admin\AdminMembershipController::class, 'create'])->name('admin.memberships.create');
+    Route::post('/memberships', [App\Http\Controllers\Admin\AdminMembershipController::class, 'store'])->name('admin.memberships.store');
+    Route::get('/memberships/{membership}', [App\Http\Controllers\Admin\AdminMembershipController::class, 'show'])->name('admin.memberships.show');
+    Route::get('/memberships/{membership}/edit', [App\Http\Controllers\Admin\AdminMembershipController::class, 'edit'])->name('admin.memberships.edit');
+    Route::put('/memberships/{membership}', [App\Http\Controllers\Admin\AdminMembershipController::class, 'update'])->name('admin.memberships.update');
+    Route::delete('/memberships/{membership}', [App\Http\Controllers\Admin\AdminMembershipController::class, 'destroy'])->name('admin.memberships.destroy');
+    
+    // Membership Subscriptions
+    Route::get('/membership-subscriptions', [App\Http\Controllers\Admin\AdminMembershipController::class, 'subscriptions'])->name('admin.membership-subscriptions.index');
+    Route::get('/membership-subscriptions/{subscription}', [App\Http\Controllers\Admin\AdminMembershipController::class, 'showSubscription'])->name('admin.membership-subscriptions.show');
+    Route::post('/membership-subscriptions/{subscription}/cancel', [App\Http\Controllers\Admin\AdminMembershipController::class, 'cancelSubscription'])->name('admin.membership-subscriptions.cancel');
+    Route::post('/membership-subscriptions/{subscription}/renew', [App\Http\Controllers\Admin\AdminMembershipController::class, 'renewSubscription'])->name('admin.membership-subscriptions.renew');
 });
 
 
@@ -127,8 +142,16 @@ Route::middleware(['auth'])->group(function () {
 // Static pages
 Route::view('/about', 'about')->name('about');
 Route::get('/services', [App\Http\Controllers\ServiceController::class, 'index'])->name('services');
-Route::view('/membership', 'membership')->name('membership');
+Route::get('/membership', [App\Http\Controllers\MembershipController::class, 'index'])->name('membership');
 Route::view('/contact', 'contact')->name('contact');
+
+// Membership routes
+Route::middleware(['auth'])->group(function () {
+    Route::post('/membership/{membership}/checkout', [App\Http\Controllers\MembershipController::class, 'checkout'])->name('membership.checkout');
+    Route::get('/my-memberships', [App\Http\Controllers\MembershipController::class, 'myMemberships'])->name('membership.my-memberships');
+    Route::post('/membership-subscription/{subscription}/cancel', [App\Http\Controllers\MembershipController::class, 'cancel'])->name('membership.cancel');
+    Route::post('/membership-subscription/{subscription}/renew', [App\Http\Controllers\MembershipController::class, 'renew'])->name('membership.renew');
+});
 
 // Booking routes
 Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');

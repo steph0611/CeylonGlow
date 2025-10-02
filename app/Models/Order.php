@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use MongoDB\Laravel\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
@@ -18,7 +19,9 @@ class Order extends Model
         'notes',
         'shipping_address',
         'billing_address',
-        'payment_method'
+        'payment_method',
+        'order_type',
+        'membership_id'
     ];
 
     protected $casts = [
@@ -63,5 +66,41 @@ class Order extends Model
     public function scopeCancelled($query)
     {
         return $query->where('status', 'cancelled');
+    }
+
+    // Scope for membership orders
+    public function scopeMembership($query)
+    {
+        return $query->where('order_type', 'membership');
+    }
+
+    // Scope for product orders
+    public function scopeProduct($query)
+    {
+        return $query->where('order_type', 'product');
+    }
+
+    /**
+     * Get membership subscriptions created from this order
+     */
+    public function membershipSubscriptions(): HasMany
+    {
+        return $this->hasMany(MembershipSubscription::class, 'order_id');
+    }
+
+    /**
+     * Check if this is a membership order
+     */
+    public function isMembershipOrder(): bool
+    {
+        return $this->order_type === 'membership';
+    }
+
+    /**
+     * Check if this is a product order
+     */
+    public function isProductOrder(): bool
+    {
+        return $this->order_type === 'product';
     }
 }

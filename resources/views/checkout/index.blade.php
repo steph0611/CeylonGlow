@@ -34,6 +34,37 @@
                                     <p class="text-sm font-medium text-[#506c2a]">${{ number_format($product['price'], 2) }}</p>
                                 </div>
                             </div>
+                        @elseif($type === 'membership' || $type === 'membership_renewal')
+                            <!-- Membership Item -->
+                            <div class="flex items-center space-x-4 mb-4 pb-4 border-b">
+                                <div class="w-16 h-16 bg-[#506c2a] rounded-lg flex items-center justify-center">
+                                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-medium text-gray-900">{{ $membership['name'] }} Membership</h3>
+                                    <p class="text-sm text-gray-500">{{ $membership['duration_months'] }} month{{ $membership['duration_months'] > 1 ? 's' : '' }}</p>
+                                    <p class="text-sm font-medium text-[#506c2a]">${{ number_format($membership['price'], 2) }}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Membership Benefits -->
+                            @if(isset($membership['benefits']) && count($membership['benefits']) > 0)
+                                <div class="mb-4 pb-4 border-b">
+                                    <h4 class="text-sm font-medium text-gray-900 mb-2">Benefits Included:</h4>
+                                    <ul class="text-xs text-gray-600 space-y-1">
+                                        @foreach($membership['benefits'] as $benefit)
+                                            <li class="flex items-center">
+                                                <svg class="w-3 h-3 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                {{ $benefit }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                         @else
                             <!-- Cart Items -->
                             <div class="space-y-3 mb-4 pb-4 border-b max-h-64 overflow-y-auto">

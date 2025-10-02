@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -65,5 +66,42 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_admin' => 'boolean',
         ];
+    }
+
+    /**
+     * Get all membership subscriptions for this user
+     */
+    public function membershipSubscriptions(): HasMany
+    {
+        return $this->hasMany(MembershipSubscription::class, 'user_id');
+    }
+
+    /**
+     * Get active membership subscription for this user
+     */
+    public function activeMembershipSubscription()
+    {
+        return $this->membershipSubscriptions()
+                    ->where('status', 'active')
+                    ->where('expires_at', '>', now())
+                    ->with('membership')
+                    ->first();
+    }
+
+    /**
+     * Check if user has an active membership
+     */
+    public function hasActiveMembership(): bool
+    {
+        return $this->activeMembershipSubscription() !== null;
+    }
+
+    /**
+     * Get the current active membership plan
+     */
+    public function getActiveMembership()
+    {
+        $subscription = $this->activeMembershipSubscription();
+        return $subscription ? $subscription->membership : null;
     }
 }

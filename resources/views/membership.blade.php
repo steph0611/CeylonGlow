@@ -21,23 +21,52 @@
     <section class="py-12">
         <div class="max-w-6xl mx-auto px-4 space-y-10">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                @foreach([
-                    ['Basic','For occasional visits', '29', ['Member-only discounts','Priority booking','Birthday perk']],
-                    ['Plus','Extra perks and savings', '59', ['Everything in Basic','Quarterly freebies','Early access']],
-                    ['Pro','Best value for regulars', '99', ['Everything in Plus','VIP support','Exclusive events']]
-                ] as $tier)
-                    <div class="bg-white rounded-xl shadow p-6 text-center">
-                        <h3 class="text-lg font-semibold">{{ $tier[0] }}</h3>
-                        <p class="text-gray-600 text-sm">{{ $tier[1] }}</p>
-                        <div class="text-3xl font-bold text-[#506c2a] mt-3">${{ $tier[2] }}<span class="text-base font-normal text-gray-600">/mo</span></div>
-                        <ul class="text-sm text-gray-700 mt-4 space-y-1">
-                            @foreach($tier[3] as $benefit)
-                                <li>{{ $benefit }}</li>
-                            @endforeach
-                        </ul>
-                        <a href="#booking" class="inline-block mt-5 bg-[#506c2a] text-white px-5 py-2.5 rounded-full text-sm">Join Now</a>
+                @forelse($memberships as $membership)
+                    <div class="bg-white rounded-xl shadow p-6 text-center relative">
+                        @if($membership->sort_order == 2)
+                            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                                <span class="bg-[#506c2a] text-white px-4 py-1 rounded-full text-sm font-medium">Most Popular</span>
+                            </div>
+                        @endif
+                        
+                        <h3 class="text-lg font-semibold">{{ $membership->name }}</h3>
+                        <p class="text-gray-600 text-sm">{{ $membership->description }}</p>
+                        <div class="text-3xl font-bold text-[#506c2a] mt-3">
+                            ${{ number_format($membership->price, 0) }}
+                            <span class="text-base font-normal text-gray-600">
+                                /{{ $membership->duration_months == 1 ? 'mo' : ($membership->duration_months == 12 ? 'year' : $membership->duration_months . 'mo') }}
+                            </span>
+                        </div>
+                        
+                        @if($membership->benefits && count($membership->benefits) > 0)
+                            <ul class="text-sm text-gray-700 mt-4 space-y-2">
+                                @foreach($membership->benefits as $benefit)
+                                    <li class="flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        {{ $benefit }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+                        
+                        <form method="POST" action="{{ route('membership.checkout', $membership->_id) }}" class="mt-5">
+                            @csrf
+                            <button type="submit" class="w-full bg-[#506c2a] text-white px-5 py-2.5 rounded-full text-sm hover:bg-[#3d5220] transition-colors">
+                                Join Now
+                            </button>
+                        </form>
                     </div>
-                @endforeach
+                @empty
+                    <div class="col-span-3 text-center py-12">
+                        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">No Membership Plans Available</h3>
+                        <p class="text-gray-500">Please check back later for membership options.</p>
+                    </div>
+                @endforelse
             </div>
 
             <div class="bg-white rounded-xl shadow p-6">

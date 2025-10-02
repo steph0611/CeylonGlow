@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\Membership;
+use App\Models\MembershipSubscription;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -136,6 +138,24 @@ class CheckoutController extends Controller
                 'subtotal' => $subtotal,
                 'tax' => $tax,
                 'total' => $total,
+                'items' => null,
+                'membership' => null
+            ]);
+        } elseif ($checkoutData['type'] === 'membership' || $checkoutData['type'] === 'membership_renewal') {
+            // Membership checkout
+            $membership = $checkoutData['membership'];
+            $subtotal = $membership['price'];
+            $tax = $subtotal * 0.1; // 10% tax
+            $total = $subtotal + $tax;
+            
+            return view('checkout.index', [
+                'type' => $checkoutData['type'],
+                'membership' => $membership,
+                'subtotal' => $subtotal,
+                'tax' => $tax,
+                'total' => $total,
+                'product' => null,
+                'quantity' => null,
                 'items' => null
             ]);
         } else {
@@ -152,7 +172,8 @@ class CheckoutController extends Controller
                 'tax' => $tax,
                 'total' => $total,
                 'product' => null,
-                'quantity' => null
+                'quantity' => null,
+                'membership' => null
             ]);
         }
     }
@@ -230,7 +251,62 @@ class CheckoutController extends Controller
                     'billing_address' => $request->input('billing_address'),
                     'shipping_address' => $request->input('shipping_address'),
                     'placed_at' => now()->toDateTimeString(),
+                    'order_type' => 'product',
                 ]);
+
+            } elseif ($checkoutData['type'] === 'membership' || $checkoutData['type'] === 'membership_renewal') {
+                // Membership checkout
+                $membership = $checkoutData['membership'];
+                $subtotal = $membership['price'];
+                $tax = $subtotal * 0.1;
+                $total = $subtotal + $tax;
+
+                // Create order
+                $order = Order::create([
+                    'customer' => [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'email' => $user->email,
+                    ],
+                    'items' => [
+                        [
+                            'membership_id' => $membership['id'],
+                            'name' => $membership['name'],
+                            'description' => $membership['description'],
+                            'price' => $membership['price'],
+                            'duration_months' => $membership['duration_months'],
+                            'benefits' => $membership['benefits'],
+                            'quantity' => 1,
+                            'line_total' => $subtotal,
+                        ]
+                    ],
+                    'total' => $total,
+                    'status' => $request->input('payment_method') === 'card' ? 'paid' : 'pending',
+                    'payment_method' => $request->input('payment_method'),
+                    'billing_address' => $request->input('billing_address'),
+                    'shipping_address' => $request->input('shipping_address'),
+                    'placed_at' => now()->toDateTimeString(),
+                    'order_type' => 'membership',
+                    'membership_id' => $membership['id'],
+                ]);
+
+                // Create membership subscription
+                if ($request->input('payment_method') === 'card') {
+                    $startDate = now();
+                    $expiryDate = $startDate->copy()->addMonths($membership['duration_months']);
+
+                    MembershipSubscription::create([
+                        'user_id' => $user->id,
+                        'membership_id' => $membership['id'],
+                        'status' => 'active',
+                        'started_at' => $startDate,
+                        'expires_at' => $expiryDate,
+                        'payment_method' => $request->input('payment_method'),
+                        'amount_paid' => $total,
+                        'order_id' => $order->_id,
+                        'auto_renew' => false,
+                    ]);
+                }
 
             } else {
                 // Cart checkout
@@ -265,6 +341,7 @@ class CheckoutController extends Controller
                     'billing_address' => $request->input('billing_address'),
                     'shipping_address' => $request->input('shipping_address'),
                     'placed_at' => now()->toDateTimeString(),
+                    'order_type' => 'product',
                 ]);
 
                 // Remove ordered items from cart
@@ -288,8 +365,14 @@ class CheckoutController extends Controller
             // Clear checkout session
             $request->session()->forget('checkout_data');
 
-            return redirect()->route('checkout.success', $order->id)
-                ->with('success', 'Order placed successfully!');
+            // Redirect based on order type
+            if ($checkoutData['type'] === 'membership' || $checkoutData['type'] === 'membership_renewal') {
+                return redirect()->route('checkout.success', $order->id)
+                    ->with('success', 'Membership purchased successfully! Welcome to Ceylon Glow!');
+            } else {
+                return redirect()->route('checkout.success', $order->id)
+                    ->with('success', 'Order placed successfully!');
+            }
 
         } catch (\Throwable $e) {
             Log::error('Payment processing failed', ['error' => $e->getMessage()]);
