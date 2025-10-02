@@ -27,14 +27,17 @@
     <body class="font-sans antialiased text-gray-900 bg-gray-100">
         <x-banner />
 
-        <div class="min-h-screen">
+        <div class="min-h-screen flex flex-col">
             {{-- Navigation --}}
             @include('navigation-menu')
 
             <!-- Page Content -->
-            <main>
+            <main class="flex-1">
                 {{ $slot }}
             </main>
+
+            {{-- Footer --}}
+            @include('footer')
         </div>
 
         @stack('modals')

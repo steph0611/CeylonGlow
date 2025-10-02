@@ -167,22 +167,8 @@
         </div>
     </section>
 
-    <footer id="contacts" class="bg-[#e7dfd7] py-8 mt-8">
-        <div class="max-w-6xl mx-auto px-4">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                <a href="#booking" class="btn-primary inline-block">BOOK ONLINE</a>
-                <div class="text-center md:text-right">
-                    <div class="font-semibold">+7 (3519)580-111</div>
-                    <div class="muted text-xs">City Center, Fashion Alley, Building 7</div>
-                </div>
-            </div>
-            <div class="flex items-center gap-4 justify-center md:justify-end mt-6 text-gray-600">
-                <span class="i bi-instagram"></span>
-                <span class="i bi-twitter"></span>
-                <span class="i bi-facebook"></span>
-            </div>
-        </div>
-    </footer>
+    {{-- Include Professional Footer --}}
+    @include('footer')
 </body>
 </html>
 
