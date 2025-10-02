@@ -1,7 +1,7 @@
 <nav 
     x-data="{ open: false, navColor: 'black' }" 
     :class="navColor === 'black' ? 'text-gray-800 md:text-gray-800 text-gray-800' : 'text-white md:text-white text-gray-800'"
-    class="bg-white/95 md:bg-transparent bg-white backdrop-blur-lg shadow-lg md:shadow-none fixed w-full z-50 border-b border-gray-200 md:border-transparent transition-all duration-300"
+    class="bg-white/95 md:bg-white bg-white backdrop-blur-lg shadow-lg md:shadow-lg fixed w-full z-50 border-b border-gray-200 md:border-gray-200 transition-all duration-300"
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
