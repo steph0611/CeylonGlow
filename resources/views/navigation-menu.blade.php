@@ -1,12 +1,12 @@
 <nav 
     x-data="{ open: false, navColor: 'black' }" 
     :class="navColor === 'black' ? 'text-gray-800 md:text-gray-800 text-gray-800' : 'text-white md:text-white text-gray-800'"
-    class="bg-white/95 md:bg-white bg-white backdrop-blur-lg shadow-lg md:shadow-lg fixed w-full z-50 border-b border-gray-200 md:border-gray-200 transition-all duration-300"
+    class="bg-white/95 md:bg-white/80 bg-white backdrop-blur-lg shadow-lg md:shadow-lg fixed w-full z-50 border-b border-gray-200 md:border-gray-200 transition-all duration-300"
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
 
-            <!-- Left Side: Logo (Desktop) / Mobile Hamburger (Mobile) -->
+            <!-- Left Side: Mobile Hamburger (Mobile only) / Logo (Desktop) -->
             <div class="flex items-center">
                 <!-- Mobile Hamburger (visible on mobile only) -->
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-lg text-gray-600 hover:text-amber-600 hover:bg-gray-100 focus:outline-none transition-all duration-200 hover:scale-105 md:hidden">
@@ -16,35 +16,44 @@
                     </svg>
                 </button>
 
-                <!-- Logo (Desktop) -->
-                <a href="{{ route('dashboard') }}" class="flex items-center space-x-2 group">
+                <!-- Logo (Desktop - Left aligned) -->
+                <a href="{{ route('dashboard') }}" class="hidden md:flex items-center space-x-2 group">
                     <img src="{{ asset('images/Logo.png') }}" alt="Ceylon Glow Logo" class="h-10 w-auto transition-transform duration-200 group-hover:scale-105">
-                    <span class="hidden sm:block text-xl font-bold tracking-tight">Ceylon Glow</span>
+                    <span class="text-xl font-bold tracking-tight">Ceylon Glow</span>
                 </a>
             </div>
 
-            <!-- Center: Desktop Navigation Links (hidden on mobile) -->
-            <div class="hidden md:flex items-center space-x-8 font-medium">
-                <a href="{{ url('/about') }}" class="relative px-3 py-2 text-sm font-medium transition-all duration-200 hover:text-amber-600 hover:scale-105">
-                    <span class="relative z-10">About Us</span>
-                    <span class="absolute inset-0 bg-amber-50 rounded-lg opacity-0 transition-opacity duration-200 hover:opacity-100"></span>
+            <!-- Center: Centered Logo (Mobile) / Desktop Navigation Links -->
+            <div class="flex items-center">
+                <!-- Centered Logo (Mobile) -->
+                <a href="{{ route('dashboard') }}" class="md:hidden flex items-center space-x-2 group">
+                    <img src="{{ asset('images/Logo.png') }}" alt="Ceylon Glow Logo" class="h-10 w-auto transition-transform duration-200 group-hover:scale-105">
+                    <span class="text-xl font-bold tracking-tight">Ceylon Glow</span>
                 </a>
-                <a href="{{ url('/services') }}" class="relative px-3 py-2 text-sm font-medium transition-all duration-200 hover:text-amber-600 hover:scale-105">
-                    <span class="relative z-10">Services</span>
-                    <span class="absolute inset-0 bg-amber-50 rounded-lg opacity-0 transition-opacity duration-200 hover:opacity-100"></span>
-                </a>
-                <a href="{{ url('/membership') }}" class="relative px-3 py-2 text-sm font-medium transition-all duration-200 hover:text-amber-600 hover:scale-105">
-                    <span class="relative z-10">Membership</span>
-                    <span class="absolute inset-0 bg-amber-50 rounded-lg opacity-0 transition-opacity duration-200 hover:opacity-100"></span>
-                </a>
-                <a href="{{ url('/contact') }}" class="relative px-3 py-2 text-sm font-medium transition-all duration-200 hover:text-amber-600 hover:scale-105">
-                    <span class="relative z-10">Contact Us</span>
-                    <span class="absolute inset-0 bg-amber-50 rounded-lg opacity-0 transition-opacity duration-200 hover:opacity-100"></span>
-                </a>
-                <a href="{{ url('/products') }}" class="relative px-3 py-2 text-sm font-medium transition-all duration-200 hover:text-amber-600 hover:scale-105">
-                    <span class="relative z-10">Products</span>
-                    <span class="absolute inset-0 bg-amber-50 rounded-lg opacity-0 transition-opacity duration-200 hover:opacity-100"></span>
-                </a>
+
+                <!-- Desktop Navigation Links (hidden on mobile) -->
+                <div class="hidden md:flex items-center space-x-8 font-medium">
+                    <a href="{{ url('/about') }}" class="relative px-3 py-2 text-sm font-medium transition-all duration-200 hover:text-amber-600 hover:scale-105">
+                        <span class="relative z-10">About Us</span>
+                        <span class="absolute inset-0 bg-amber-50 rounded-lg opacity-0 transition-opacity duration-200 hover:opacity-100"></span>
+                    </a>
+                    <a href="{{ url('/services') }}" class="relative px-3 py-2 text-sm font-medium transition-all duration-200 hover:text-amber-600 hover:scale-105">
+                        <span class="relative z-10">Services</span>
+                        <span class="absolute inset-0 bg-amber-50 rounded-lg opacity-0 transition-opacity duration-200 hover:opacity-100"></span>
+                    </a>
+                    <a href="{{ url('/membership') }}" class="relative px-3 py-2 text-sm font-medium transition-all duration-200 hover:text-amber-600 hover:scale-105">
+                        <span class="relative z-10">Membership</span>
+                        <span class="absolute inset-0 bg-amber-50 rounded-lg opacity-0 transition-opacity duration-200 hover:opacity-100"></span>
+                    </a>
+                    <a href="{{ url('/contact') }}" class="relative px-3 py-2 text-sm font-medium transition-all duration-200 hover:text-amber-600 hover:scale-105">
+                        <span class="relative z-10">Contact Us</span>
+                        <span class="absolute inset-0 bg-amber-50 rounded-lg opacity-0 transition-opacity duration-200 hover:opacity-100"></span>
+                    </a>
+                    <a href="{{ url('/products') }}" class="relative px-3 py-2 text-sm font-medium transition-all duration-200 hover:text-amber-600 hover:scale-105">
+                        <span class="relative z-10">Products</span>
+                        <span class="absolute inset-0 bg-amber-50 rounded-lg opacity-0 transition-opacity duration-200 hover:opacity-100"></span>
+                    </a>
+                </div>
             </div>
 
             <!-- Right Side: Account, Teams, and User Actions -->
