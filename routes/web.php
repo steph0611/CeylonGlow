@@ -90,6 +90,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::put('/bookings/{id}', [AdminBookingController::class, 'update'])->name('admin.bookings.update');
     Route::delete('/bookings/{id}', [AdminBookingController::class, 'destroy'])->name('admin.bookings.destroy');
     Route::patch('/bookings/{id}/status', [AdminBookingController::class, 'updateStatus'])->name('admin.bookings.update-status');
+
+    // Customer CRUD
+    Route::get('/customers', [App\Http\Controllers\Admin\AdminCustomerController::class, 'index'])->name('admin.customers.index');
+    Route::get('/customers/create', [App\Http\Controllers\Admin\AdminCustomerController::class, 'create'])->name('admin.customers.create');
+    Route::post('/customers', [App\Http\Controllers\Admin\AdminCustomerController::class, 'store'])->name('admin.customers.store');
+    Route::get('/customers/{customer}', [App\Http\Controllers\Admin\AdminCustomerController::class, 'show'])->name('admin.customers.show');
+    Route::get('/customers/{customer}/edit', [App\Http\Controllers\Admin\AdminCustomerController::class, 'edit'])->name('admin.customers.edit');
+    Route::put('/customers/{customer}', [App\Http\Controllers\Admin\AdminCustomerController::class, 'update'])->name('admin.customers.update');
+    Route::delete('/customers/{customer}', [App\Http\Controllers\Admin\AdminCustomerController::class, 'destroy'])->name('admin.customers.destroy');
 });
 
 

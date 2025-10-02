@@ -371,6 +371,7 @@
             <button class="tab-btn active" data-tab="products">Products</button>
             <button class="tab-btn" data-tab="banners">Banners</button>
             <button class="tab-btn" data-tab="services">Services</button>
+            <button class="tab-btn" data-tab="customers">Customers</button>
             <button class="tab-btn" data-tab="orders">Orders</button>
             <button class="tab-btn" data-tab="bookings">Bookings</button>
         </div>
@@ -546,6 +547,35 @@
                     <p class="text-gray-400 text-sm">Add your first service to get started</p>
                 </div>
             @endif
+        </div>
+
+        <!-- Customers Tab -->
+        <div id="customers" class="tab-content hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-900">Customer Management</h3>
+                <a href="{{ route('admin.customers.index') }}" class="btn-primary">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    Manage Customers
+                </a>
+            </div>
+            
+            <div class="bg-gray-50 rounded-xl p-6">
+                <div class="text-center">
+                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <h4 class="text-lg font-medium text-gray-900 mb-2">Customer Management</h4>
+                    <p class="text-gray-500 mb-4">View and manage all registered customers</p>
+                    <a href="{{ route('admin.customers.index') }}" class="btn-primary">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        View All Customers
+                    </a>
+                </div>
+            </div>
         </div>
 
         <!-- Orders Tab -->
