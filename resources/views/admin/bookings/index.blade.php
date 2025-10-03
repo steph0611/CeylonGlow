@@ -1,6 +1,27 @@
-@extends('layouts.admin')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin - Bookings Management</title>
+    @vite(['resources/css/app.css','resources/js/app.js'])
+    <style>
+        .status-badge {
+            @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+        }
+        .status-active { @apply bg-green-100 text-green-800; }
+        .status-inactive { @apply bg-red-100 text-red-800; }
+        .status-pending { @apply bg-yellow-100 text-yellow-800; }
+        .status-confirmed { @apply bg-blue-100 text-blue-800; }
+        .status-cancelled { @apply bg-red-100 text-red-800; }
+        .status-completed { @apply bg-green-100 text-green-800; }
 
-@section('content')
+        .btn-primary { @apply bg-[#506c2a] text-white px-4 py-2 rounded-lg hover:bg-[#3d5220] transition-colors; }
+        .btn-secondary { @apply bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors; }
+        .btn-danger { @apply bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors; }
+    </style>
+</head>
+<body class="antialiased text-gray-900 bg-gray-50">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -138,4 +159,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endsection
+</body>
+</html>
