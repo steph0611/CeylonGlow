@@ -85,7 +85,30 @@ class Order extends Model
      */
     public function membershipSubscriptions(): HasMany
     {
-        return $this->hasMany(MembershipSubscription::class, 'order_id');
+        return $this->hasMany(MembershipPurchase::class, 'order_id');
+    }
+
+    /**
+     * Get the user who placed this order (cross-database relationship)
+     */
+    public function user()
+    {
+        $customerId = $this->customer['id'] ?? null;
+        if ($customerId) {
+            return \App\Models\User::find($customerId);
+        }
+        return null;
+    }
+
+    /**
+     * Get membership plan for membership orders
+     */
+    public function membership()
+    {
+        if ($this->order_type === 'membership' && $this->membership_id) {
+            return Membership::find($this->membership_id);
+        }
+        return null;
     }
 
     /**

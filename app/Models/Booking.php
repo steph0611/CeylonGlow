@@ -32,9 +32,59 @@ class Booking extends Model
         'updated_at' => 'datetime'
     ];
 
-    // Relationship with Service
+    /**
+     * Get the service for this booking
+     */
     public function service()
     {
-        return $this->belongsTo(Service::class, 'service_id');
+        return Service::find($this->service_id);
+    }
+
+    /**
+     * Get the user who made this booking (cross-database relationship)
+     */
+    public function user()
+    {
+        return \App\Models\User::where('email', $this->customer_email)->first();
+    }
+
+    /**
+     * Check if booking is active
+     */
+    public function isActive(): bool
+    {
+        return in_array($this->status, ['pending', 'confirmed']);
+    }
+
+    /**
+     * Check if booking is completed
+     */
+    public function isCompleted(): bool
+    {
+        return $this->status === 'completed';
+    }
+
+    /**
+     * Check if booking is cancelled
+     */
+    public function isCancelled(): bool
+    {
+        return $this->status === 'cancelled';
+    }
+
+    /**
+     * Scope for active bookings
+     */
+    public function scopeActive($query)
+    {
+        return $query->whereIn('status', ['pending', 'confirmed']);
+    }
+
+    /**
+     * Scope for completed bookings
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->where('status', 'completed');
     }
 }

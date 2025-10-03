@@ -69,19 +69,19 @@ class User extends Authenticatable
     }
 
     /**
-     * Get all membership purchases for this user
+     * Get all membership purchases for this user (MongoDB)
      */
-    public function membershipPurchases(): HasMany
+    public function membershipPurchases()
     {
-        return $this->hasMany(MembershipPurchase::class, 'user_id');
+        return MembershipPurchase::where('user_id', $this->id)->get();
     }
 
     /**
-     * Get active membership purchase for this user
+     * Get active membership purchase for this user (MongoDB)
      */
     public function activeMembershipPurchase()
     {
-        return $this->membershipPurchases()
+        return MembershipPurchase::where('user_id', $this->id)
                     ->where('status', 'active')
                     ->where('expires_at', '>', now())
                     ->with('membership')
@@ -103,5 +103,21 @@ class User extends Authenticatable
     {
         $purchase = $this->activeMembershipPurchase();
         return $purchase ? $purchase->membership : null;
+    }
+
+    /**
+     * Get all orders for this user (MongoDB)
+     */
+    public function orders()
+    {
+        return Order::where('customer.id', $this->id)->get();
+    }
+
+    /**
+     * Get all bookings for this user (MongoDB)
+     */
+    public function bookings()
+    {
+        return Booking::where('customer_email', $this->email)->get();
     }
 }

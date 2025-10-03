@@ -29,27 +29,27 @@ class MembershipPurchase extends Model
     ];
 
     /**
-     * Get the user who purchased this membership
+     * Get the user who purchased this membership (cross-database relationship)
      */
-    public function user(): BelongsTo
+    public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return \App\Models\User::find($this->user_id);
     }
 
     /**
      * Get the membership plan for this purchase
      */
-    public function membership(): BelongsTo
+    public function membership()
     {
-        return $this->belongsTo(Membership::class, 'membership_id');
+        return Membership::find($this->membership_id);
     }
 
     /**
      * Get the order associated with this purchase
      */
-    public function order(): BelongsTo
+    public function order()
     {
-        return $this->belongsTo(Order::class, 'order_id');
+        return Order::find($this->order_id);
     }
 
     /**

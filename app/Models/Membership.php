@@ -31,9 +31,20 @@ class Membership extends Model
     /**
      * Get all membership purchases for this membership plan
      */
-    public function purchases(): HasMany
+    public function purchases()
     {
-        return $this->hasMany(MembershipPurchase::class, 'membership_id');
+        return MembershipPurchase::where('membership_id', $this->_id)->get();
+    }
+
+    /**
+     * Get active membership purchases for this plan
+     */
+    public function activePurchases()
+    {
+        return MembershipPurchase::where('membership_id', $this->_id)
+                    ->where('status', 'active')
+                    ->where('expires_at', '>', now())
+                    ->get();
     }
 
     /**
