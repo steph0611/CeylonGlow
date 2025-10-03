@@ -33,7 +33,7 @@ class Membership extends Model
      */
     public function purchases()
     {
-        return MembershipPurchase::where('membership_id', $this->_id)->get();
+        return $this->hasMany(MembershipPurchase::class, 'membership_id', '_id');
     }
 
     /**
@@ -41,10 +41,9 @@ class Membership extends Model
      */
     public function activePurchases()
     {
-        return MembershipPurchase::where('membership_id', $this->_id)
+        return $this->hasMany(MembershipPurchase::class, 'membership_id', '_id')
                     ->where('status', 'active')
-                    ->where('expires_at', '>', now())
-                    ->get();
+                    ->where('expires_at', '>', now());
     }
 
     /**
