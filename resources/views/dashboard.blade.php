@@ -83,11 +83,9 @@
         </div>
     </section>
 
-    <footer id="contacts" class="bg-[#e7dfd7] py-8 mt-8">
-        <div class="max-w-6xl mx-auto px-4">
-            @livewire('contact-footer')
-        </div>
-    </footer>
+    
+    {{-- Include Professional Footer --}}
+    @include('footer')
 
     <script>
         // Auto-advance carousels functionality
