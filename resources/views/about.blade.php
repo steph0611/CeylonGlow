@@ -155,6 +155,9 @@
         </div>
     </section>
 
+    {{-- Include Professional Footer --}}
+    @include('footer')
+
 </body>
 </html>
 

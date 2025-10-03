@@ -75,6 +75,9 @@
         </div>
     </section>
 
+    {{-- Include Professional Footer --}}
+    @include('footer')
+
     @livewireScripts
 </body>
 </html>
