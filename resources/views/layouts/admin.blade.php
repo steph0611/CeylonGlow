@@ -66,7 +66,7 @@
                 <a href="{{ route('admin.bookings.index') }}" class="admin-nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
                     <i class="fas fa-calendar-alt mr-2"></i> Bookings
                 </a>
-                <a href="{{ route('admin.products.index') }}" class="admin-nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.products.create') }}" class="admin-nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                     <i class="fas fa-box mr-2"></i> Products
                 </a>
                 <a href="{{ route('admin.services.index') }}" class="admin-nav-link {{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
@@ -77,9 +77,6 @@
                 </a>
                 <a href="{{ route('admin.memberships.index') }}" class="admin-nav-link {{ request()->routeIs('admin.memberships.*') ? 'active' : '' }}">
                     <i class="fas fa-crown mr-2"></i> Memberships
-                </a>
-                <a href="{{ route('admin.banners.index') }}" class="admin-nav-link {{ request()->routeIs('admin.banners.*') ? 'active' : '' }}">
-                    <i class="fas fa-image mr-2"></i> Banners
                 </a>
             </nav>
             
