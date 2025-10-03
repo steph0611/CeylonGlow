@@ -18,9 +18,7 @@
     {{-- Include Navigation --}}
     @include('navigation-menu')
 
-
-
-    <section class="relative h-screen w-full overflow-hidden">
+    <section class="relative h-screen w-full overflow-hidden -mt-16 pt-16">
         <!-- Desktop Background video -->
         <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover hidden md:block">
             <source src="{{ asset('videos/hero-video.mp4') }}" type="video/mp4">

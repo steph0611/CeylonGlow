@@ -11,7 +11,7 @@
 
     @include('navigation-menu')
 
-    <section class="py-12">
+    <section class="py-12 -mt-16 pt-16">
         <div class="max-w-5xl mx-auto px-4">
             <a href="{{ route('products.index') }}" class="text-sm text-[#506c2a] hover:text-[#3e541f] transition-colors">&larr; Back to products</a>
             

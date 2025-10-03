@@ -11,7 +11,7 @@
     @include('navigation-menu')
 
     <!-- Hero -->
-    <section class="relative w-full overflow-hidden h-[320px] md:h-[420px]">
+    <section class="relative w-full overflow-hidden h-[320px] md:h-[420px] -mt-16 pt-16">
         <img src="{{ asset('images/service-3.jpg') }}" class="w-full h-full object-cover" alt="About">
         <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/30"></div>
         <div class="absolute inset-0 flex items-center">

@@ -10,7 +10,7 @@
 
     @include('navigation-menu')
 
-    <section class="relative w-full overflow-hidden h-64">
+    <section class="relative w-full overflow-hidden h-64 -mt-16 pt-16">
         <img src="{{ asset('images/news-2.jpg') }}" class="w-full h-full object-cover" alt="Membership">
         <div class="absolute inset-0 bg-black/40"></div>
         <div class="absolute inset-0 flex items-center justify-center">

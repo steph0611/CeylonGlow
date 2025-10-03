@@ -23,7 +23,7 @@
     <div :class="open ? 'blur-sm' : ''">
 
     <!-- Hero Section with Banners Carousel -->
-    <section class="relative w-full overflow-hidden">
+    <section class="relative w-full overflow-hidden -mt-16 pt-16">
         @php $bannerCount = isset($banners) ? $banners->count() : 0; @endphp
 
         @if($bannerCount > 0)
