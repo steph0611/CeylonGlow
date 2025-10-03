@@ -20,18 +20,18 @@
 
     <section class="py-12">
         <div class="max-w-6xl mx-auto px-4 space-y-10">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 @forelse($memberships as $membership)
-                    <div class="bg-white rounded-xl shadow p-6 text-center relative">
+                    <div class="bg-white rounded-xl shadow-lg p-8 text-center relative transform hover:scale-105 transition-all duration-300">
                         @if($membership->sort_order == 2)
                             <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
                                 <span class="bg-[#506c2a] text-white px-4 py-1 rounded-full text-sm font-medium">Most Popular</span>
                             </div>
                         @endif
                         
-                        <h3 class="text-lg font-semibold">{{ $membership->name }}</h3>
-                        <p class="text-gray-600 text-sm">{{ $membership->description }}</p>
-                        <div class="text-3xl font-bold text-[#506c2a] mt-3">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ $membership->name }}</h3>
+                        <p class="text-gray-600 text-base mb-4">{{ $membership->description }}</p>
+                        <div class="text-4xl font-bold text-[#506c2a] mt-4 mb-6">
                             ${{ number_format($membership->price, 0) }}
                             <span class="text-base font-normal text-gray-600">
                                 /{{ $membership->duration_days == 30 ? 'month' : ($membership->duration_days == 365 ? 'year' : $membership->duration_days . ' days') }}
@@ -39,21 +39,21 @@
                         </div>
                         
                         @if($membership->benefits && count($membership->benefits) > 0)
-                            <ul class="text-sm text-gray-700 mt-4 space-y-2">
+                            <ul class="text-base text-gray-700 mt-6 space-y-3 mb-8">
                                 @foreach($membership->benefits as $benefit)
                                     <li class="flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                         </svg>
-                                        {{ $benefit }}
+                                        <span class="text-left">{{ $benefit }}</span>
                                     </li>
                                 @endforeach
                             </ul>
                         @endif
                         
-                        <form method="POST" action="{{ route('membership.purchase', $membership->_id) }}" class="mt-5">
+                        <form method="POST" action="{{ route('membership.purchase', $membership->_id) }}" class="mt-6">
                             @csrf
-                            <button type="submit" class="w-full bg-[#506c2a] text-white px-5 py-2.5 rounded-full text-sm hover:bg-[#3d5220] transition-colors">
+                            <button type="submit" class="w-full bg-[#506c2a] text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-[#3d5220] transition-all duration-300 transform hover:scale-105 shadow-lg">
                                 Join Now
                             </button>
                         </form>

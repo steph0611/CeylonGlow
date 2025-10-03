@@ -144,6 +144,9 @@ Route::view('/contact', 'contact')->name('contact');
 // Membership routes
 Route::middleware(['auth'])->group(function () {
     Route::post('/membership/{membership}/purchase', [App\Http\Controllers\MembershipController::class, 'purchase'])->name('membership.purchase');
+    Route::get('/my-memberships', [App\Http\Controllers\MembershipController::class, 'myMemberships'])->name('membership.my-memberships');
+    Route::post('/membership-purchase/{membershipPurchase}/cancel', [App\Http\Controllers\MembershipController::class, 'cancel'])->name('membership.cancel');
+    Route::post('/membership-purchase/{membershipPurchase}/renew', [App\Http\Controllers\MembershipController::class, 'renew'])->name('membership.renew');
 });
 
 // Booking routes

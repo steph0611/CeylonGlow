@@ -254,7 +254,7 @@ class CheckoutController extends Controller
                     'order_type' => 'product',
                 ]);
 
-            } elseif ($checkoutData['type'] === 'membership') {
+            } elseif ($checkoutData['type'] === 'membership' || $checkoutData['type'] === 'membership_renewal') {
                 // Membership checkout
                 $membership = $checkoutData['membership'];
                 $subtotal = $membership['price'];
@@ -365,7 +365,7 @@ class CheckoutController extends Controller
             $request->session()->forget('checkout_data');
 
             // Redirect based on order type
-            if ($checkoutData['type'] === 'membership') {
+            if ($checkoutData['type'] === 'membership' || $checkoutData['type'] === 'membership_renewal') {
                 return redirect()->route('checkout.success', $order->id)
                     ->with('success', 'Membership purchased successfully! Welcome to Ceylon Glow!');
             } else {

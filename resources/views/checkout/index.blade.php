@@ -34,7 +34,7 @@
                                     <p class="text-sm font-medium text-[#506c2a]">${{ number_format($product['price'], 2) }}</p>
                                 </div>
                             </div>
-                        @elseif($type === 'membership')
+                        @elseif($type === 'membership' || $type === 'membership_renewal')
                             <!-- Membership Item -->
                             <div class="flex items-center space-x-4 mb-4 pb-4 border-b">
                                 <div class="w-16 h-16 bg-[#506c2a] rounded-lg flex items-center justify-center">
@@ -43,7 +43,12 @@
                                     </svg>
                                 </div>
                                 <div class="flex-1">
-                                    <h3 class="font-medium text-gray-900">{{ $membership['name'] }} Membership</h3>
+                                    <h3 class="font-medium text-gray-900">
+                                        {{ $membership['name'] }} Membership
+                                        @if($type === 'membership_renewal')
+                                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full ml-2">Renewal</span>
+                                        @endif
+                                    </h3>
                                     <p class="text-sm text-gray-500">{{ $membership['duration_days'] }} day{{ $membership['duration_days'] > 1 ? 's' : '' }}</p>
                                     <p class="text-sm font-medium text-[#506c2a]">${{ number_format($membership['price'], 2) }}</p>
                                 </div>
