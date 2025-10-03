@@ -34,7 +34,7 @@
                         <div class="text-3xl font-bold text-[#506c2a] mt-3">
                             ${{ number_format($membership->price, 0) }}
                             <span class="text-base font-normal text-gray-600">
-                                /{{ $membership->duration_months == 1 ? 'mo' : ($membership->duration_months == 12 ? 'year' : $membership->duration_months . 'mo') }}
+                                /{{ $membership->duration_days == 30 ? 'month' : ($membership->duration_days == 365 ? 'year' : $membership->duration_days . ' days') }}
                             </span>
                         </div>
                         
@@ -51,7 +51,7 @@
                             </ul>
                         @endif
                         
-                        <form method="POST" action="{{ route('membership.checkout', $membership->_id) }}" class="mt-5">
+                        <form method="POST" action="{{ route('membership.purchase', $membership->_id) }}" class="mt-5">
                             @csrf
                             <button type="submit" class="w-full bg-[#506c2a] text-white px-5 py-2.5 rounded-full text-sm hover:bg-[#3d5220] transition-colors">
                                 Join Now

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\Membership;
-use App\Models\MembershipSubscription;
+use App\Models\MembershipPurchase;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -254,7 +254,7 @@ class CheckoutController extends Controller
                     'order_type' => 'product',
                 ]);
 
-            } elseif ($checkoutData['type'] === 'membership' || $checkoutData['type'] === 'membership_renewal') {
+            } elseif ($checkoutData['type'] === 'membership') {
                 // Membership checkout
                 $membership = $checkoutData['membership'];
                 $subtotal = $membership['price'];
@@ -274,7 +274,7 @@ class CheckoutController extends Controller
                             'name' => $membership['name'],
                             'description' => $membership['description'],
                             'price' => $membership['price'],
-                            'duration_months' => $membership['duration_months'],
+                            'duration_days' => $membership['duration_days'],
                             'benefits' => $membership['benefits'],
                             'quantity' => 1,
                             'line_total' => $subtotal,
@@ -290,21 +290,20 @@ class CheckoutController extends Controller
                     'membership_id' => $membership['id'],
                 ]);
 
-                // Create membership subscription
+                // Create membership purchase
                 if ($request->input('payment_method') === 'card') {
                     $startDate = now();
-                    $expiryDate = $startDate->copy()->addMonths($membership['duration_months']);
+                    $expiryDate = $startDate->copy()->addDays($membership['duration_days']);
 
-                    MembershipSubscription::create([
+                    MembershipPurchase::create([
                         'user_id' => $user->id,
                         'membership_id' => $membership['id'],
                         'status' => 'active',
-                        'started_at' => $startDate,
+                        'purchased_at' => $startDate,
                         'expires_at' => $expiryDate,
                         'payment_method' => $request->input('payment_method'),
                         'amount_paid' => $total,
                         'order_id' => $order->_id,
-                        'auto_renew' => false,
                     ]);
                 }
 
@@ -366,7 +365,7 @@ class CheckoutController extends Controller
             $request->session()->forget('checkout_data');
 
             // Redirect based on order type
-            if ($checkoutData['type'] === 'membership' || $checkoutData['type'] === 'membership_renewal') {
+            if ($checkoutData['type'] === 'membership') {
                 return redirect()->route('checkout.success', $order->id)
                     ->with('success', 'Membership purchased successfully! Welcome to Ceylon Glow!');
             } else {

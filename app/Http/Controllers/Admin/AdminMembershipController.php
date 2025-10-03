@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Membership;
-use App\Models\MembershipSubscription;
+use App\Models\MembershipPurchase;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -17,15 +17,15 @@ class AdminMembershipController extends Controller
     public function index(): View
     {
         $memberships = Membership::ordered()->get();
-        $totalSubscriptions = MembershipSubscription::count();
-        $activeSubscriptions = MembershipSubscription::active()->count();
-        $expiredSubscriptions = MembershipSubscription::expired()->count();
+        $totalPurchases = MembershipPurchase::count();
+        $activeMemberships = MembershipPurchase::active()->count();
+        $expiredMemberships = MembershipPurchase::expired()->count();
 
         return view('admin.memberships.index', compact(
             'memberships', 
-            'totalSubscriptions', 
-            'activeSubscriptions', 
-            'expiredSubscriptions'
+            'totalPurchases', 
+            'activeMemberships', 
+            'expiredMemberships'
         ));
     }
 
@@ -46,13 +46,9 @@ class AdminMembershipController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
             'price' => 'required|numeric|min:0',
-            'duration_months' => 'required|integer|min:1|max:12',
+            'duration_days' => 'required|integer|min:1',
             'benefits' => 'required|array|min:1',
             'benefits.*' => 'required|string|max:255',
-            'features' => 'nullable|array',
-            'features.*' => 'string|max:255',
-            'discount_percentage' => 'nullable|numeric|min:0|max:100',
-            'max_uses_per_month' => 'nullable|integer|min:1',
             'is_active' => 'boolean',
             'sort_order' => 'nullable|integer|min:0',
         ]);
@@ -64,27 +60,6 @@ class AdminMembershipController extends Controller
 
         return redirect()->route('admin.memberships.index')
             ->with('success', 'Membership plan created successfully');
-    }
-
-    /**
-     * Display the specified membership plan
-     */
-    public function show(Membership $membership): View
-    {
-        $subscriptions = $membership->subscriptions()
-            ->with('user')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-
-        $activeSubscriptions = $membership->activeSubscriptions()->count();
-        $totalRevenue = $membership->subscriptions()->sum('amount_paid');
-
-        return view('admin.memberships.show', compact(
-            'membership', 
-            'subscriptions', 
-            'activeSubscriptions', 
-            'totalRevenue'
-        ));
     }
 
     /**
@@ -104,13 +79,9 @@ class AdminMembershipController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
             'price' => 'required|numeric|min:0',
-            'duration_months' => 'required|integer|min:1|max:12',
+            'duration_days' => 'required|integer|min:1',
             'benefits' => 'required|array|min:1',
             'benefits.*' => 'required|string|max:255',
-            'features' => 'nullable|array',
-            'features.*' => 'string|max:255',
-            'discount_percentage' => 'nullable|numeric|min:0|max:100',
-            'max_uses_per_month' => 'nullable|integer|min:1',
             'is_active' => 'boolean',
             'sort_order' => 'nullable|integer|min:0',
         ]);
@@ -129,9 +100,9 @@ class AdminMembershipController extends Controller
      */
     public function destroy(Membership $membership): RedirectResponse
     {
-        // Check if there are active subscriptions
-        if ($membership->activeSubscriptions()->count() > 0) {
-            return back()->with('error', 'Cannot delete membership plan with active subscriptions.');
+        // Check if there are active purchases
+        if ($membership->purchases()->active()->count() > 0) {
+            return back()->with('error', 'Cannot delete membership plan with active purchases.');
         }
 
         $membership->delete();
@@ -141,59 +112,20 @@ class AdminMembershipController extends Controller
     }
 
     /**
-     * Display all membership subscriptions
+     * Display all membership purchases
      */
-    public function subscriptions(): View
+    public function purchases(): View
     {
-        $subscriptions = MembershipSubscription::with(['user', 'membership'])
+        $purchases = MembershipPurchase::with(['user', 'membership'])
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
         $stats = [
-            'total' => MembershipSubscription::count(),
-            'active' => MembershipSubscription::active()->count(),
-            'expired' => MembershipSubscription::expired()->count(),
-            'cancelled' => MembershipSubscription::cancelled()->count(),
+            'total' => MembershipPurchase::count(),
+            'active' => MembershipPurchase::active()->count(),
+            'expired' => MembershipPurchase::expired()->count(),
         ];
 
-        return view('admin.memberships.subscriptions', compact('subscriptions', 'stats'));
-    }
-
-    /**
-     * Show subscription details
-     */
-    public function showSubscription(MembershipSubscription $subscription): View
-    {
-        $subscription->load(['user', 'membership', 'order']);
-
-        return view('admin.memberships.subscription-details', compact('subscription'));
-    }
-
-    /**
-     * Cancel a subscription (admin action)
-     */
-    public function cancelSubscription(Request $request, MembershipSubscription $subscription): RedirectResponse
-    {
-        $request->validate([
-            'cancellation_reason' => 'required|string|max:500'
-        ]);
-
-        $subscription->cancel($request->input('cancellation_reason'));
-
-        return back()->with('success', 'Subscription cancelled successfully.');
-    }
-
-    /**
-     * Renew a subscription (admin action)
-     */
-    public function renewSubscription(MembershipSubscription $subscription): RedirectResponse
-    {
-        if (!$subscription->isExpired()) {
-            return back()->with('error', 'Can only renew expired subscriptions.');
-        }
-
-        $subscription->renew();
-
-        return back()->with('success', 'Subscription renewed successfully.');
+        return view('admin.memberships.purchases', compact('purchases', 'stats'));
     }
 }

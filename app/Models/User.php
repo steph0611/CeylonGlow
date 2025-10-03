@@ -69,19 +69,19 @@ class User extends Authenticatable
     }
 
     /**
-     * Get all membership subscriptions for this user
+     * Get all membership purchases for this user
      */
-    public function membershipSubscriptions(): HasMany
+    public function membershipPurchases(): HasMany
     {
-        return $this->hasMany(MembershipSubscription::class, 'user_id');
+        return $this->hasMany(MembershipPurchase::class, 'user_id');
     }
 
     /**
-     * Get active membership subscription for this user
+     * Get active membership purchase for this user
      */
-    public function activeMembershipSubscription()
+    public function activeMembershipPurchase()
     {
-        return $this->membershipSubscriptions()
+        return $this->membershipPurchases()
                     ->where('status', 'active')
                     ->where('expires_at', '>', now())
                     ->with('membership')
@@ -93,7 +93,7 @@ class User extends Authenticatable
      */
     public function hasActiveMembership(): bool
     {
-        return $this->activeMembershipSubscription() !== null;
+        return $this->activeMembershipPurchase() !== null;
     }
 
     /**
@@ -101,7 +101,7 @@ class User extends Authenticatable
      */
     public function getActiveMembership()
     {
-        $subscription = $this->activeMembershipSubscription();
-        return $subscription ? $subscription->membership : null;
+        $purchase = $this->activeMembershipPurchase();
+        return $purchase ? $purchase->membership : null;
     }
 }

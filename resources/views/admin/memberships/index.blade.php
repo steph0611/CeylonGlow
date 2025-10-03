@@ -55,8 +55,8 @@
                             </div>
                             <div class="ml-5 w-0 flex-1">
                                 <dl>
-                                    <dt class="text-sm font-medium text-gray-500 truncate">Total Subscriptions</dt>
-                                    <dd class="text-lg font-medium text-gray-900">{{ $totalSubscriptions }}</dd>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">Total Purchases</dt>
+                                    <dd class="text-lg font-medium text-gray-900">{{ $totalPurchases }}</dd>
                                 </dl>
                             </div>
                         </div>
@@ -73,8 +73,8 @@
                             </div>
                             <div class="ml-5 w-0 flex-1">
                                 <dl>
-                                    <dt class="text-sm font-medium text-gray-500 truncate">Active Subscriptions</dt>
-                                    <dd class="text-lg font-medium text-gray-900">{{ $activeSubscriptions }}</dd>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">Active Memberships</dt>
+                                    <dd class="text-lg font-medium text-gray-900">{{ $activeMemberships }}</dd>
                                 </dl>
                             </div>
                         </div>
@@ -86,11 +86,11 @@
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-2xl font-bold text-gray-900">Membership Plans</h3>
                 <div class="flex space-x-3">
-                    <a href="{{ route('admin.membership-subscriptions.index') }}" class="btn-secondary">
+                    <a href="{{ route('admin.membership-purchases.index') }}" class="btn-secondary">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                         </svg>
-                        View Subscriptions
+                        View Purchases
                     </a>
                     <a href="{{ route('admin.memberships.create') }}" class="btn-primary">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -113,7 +113,7 @@
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subscriptions</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Purchases</th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
@@ -128,12 +128,9 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="text-sm text-gray-900">${{ number_format($membership->price, 2) }}</div>
-                                                <div class="text-sm text-gray-500">
-                                                    /{{ $membership->duration_months == 1 ? 'month' : ($membership->duration_months == 12 ? 'year' : $membership->duration_months . ' months') }}
-                                                </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                {{ $membership->duration_text }}
+                                                {{ $membership->duration_days }} days
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $membership->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
@@ -141,12 +138,10 @@
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                {{ $membership->subscriptions->count() }} total
-                                                <div class="text-xs text-gray-500">{{ $membership->activeSubscriptions->count() }} active</div>
+                                                {{ $membership->purchases->count() }} total
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <div class="flex space-x-2">
-                                                    <a href="{{ route('admin.memberships.show', $membership->_id) }}" class="text-blue-600 hover:text-blue-900">View</a>
                                                     <a href="{{ route('admin.memberships.edit', $membership->_id) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
                                                     <form method="POST" action="{{ route('admin.memberships.destroy', $membership->_id) }}" class="inline">
                                                         @csrf

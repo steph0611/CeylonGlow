@@ -11,6 +11,14 @@ class BookingController extends Controller
 {
     public function store(Request $request)
     {
+        // Check if user is authenticated and has active membership
+        $user = $request->user();
+        if (!$user || !$user->hasActiveMembership()) {
+            return redirect()->back()
+                ->with('error', 'You need an active membership to book services. Please purchase a membership first.')
+                ->withInput();
+        }
+
         $validator = Validator::make($request->all(), [
             'customer_name' => 'required|string|max:255',
             'customer_email' => 'required|email|max:255',
